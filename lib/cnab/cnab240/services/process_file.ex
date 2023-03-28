@@ -32,6 +32,7 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
   defp process_file(file) do
     map =
       file.path
+      |> File.read!()
       |> String.split("\r\n")
       |> classify_by_type()
 
