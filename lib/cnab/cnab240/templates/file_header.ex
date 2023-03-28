@@ -63,25 +63,25 @@ defmodule Cnab.Cnab240.Templates.FileHeader do
 
   @spec generate(List.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def generate([raw_string | _]) do
-    control_context = info_lines(raw_string)
-    company = company_lines(raw_string)
-    about_file = about_file(raw_string)
+    control_fields = control_fields(raw_string)
+    company_fields = company_fields(raw_string)
+    about_fields = about_fields(raw_string)
 
     {:ok,
      %{
-       controle: control_context,
+       controle: control_fields,
        uso_febraban_01: convert_position(raw_string, 9, 17),
-       empresa: company,
+       empresa: company_fields,
        nome_banco: convert_position(raw_string, 103, 132),
        uso_febraban_02: convert_position(raw_string, 133, 142),
-       arquivo: about_file,
+       arquivo: about_fields,
        uso_banco: convert_position(raw_string, 172, 191),
        uso_empresa: convert_position(raw_string, 192, 211),
        uso_febraban_03: convert_position(raw_string, 212, 240)
      }}
   end
 
-  defp info_lines(raw_string) do
+  defp control_fields(raw_string) do
     %{
       codigo_do_banco: convert_position(raw_string, 1, 3),
       lote: convert_position(raw_string, 4, 7),
@@ -89,7 +89,7 @@ defmodule Cnab.Cnab240.Templates.FileHeader do
     }
   end
 
-  defp company_lines(raw_string) do
+  defp company_fields(raw_string) do
     %{
       inscricao: %{
         tipo_inscricao_empresa: convert_position(raw_string, 18, 18),
@@ -107,7 +107,7 @@ defmodule Cnab.Cnab240.Templates.FileHeader do
     }
   end
 
-  defp about_file(raw_string) do
+  defp about_fields(raw_string) do
     %{
       codigo_remessa_retorno: convert_position(raw_string, 143, 143),
       data_geracao_arquivo: convert_position(raw_string, 144, 151),

@@ -31,8 +31,8 @@ defmodule Cnab.Cnab240.Templates.Footer do
 
   @spec generate(List.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def generate([raw_string | _tl]) do
-    info = info_lines(raw_string)
-    total = total_info(raw_string)
+    info = info_fields(raw_string)
+    total = total_fields(raw_string)
 
     {:ok,
      %{
@@ -43,7 +43,7 @@ defmodule Cnab.Cnab240.Templates.Footer do
      }}
   end
 
-  defp info_lines(raw_string) do
+  defp info_fields(raw_string) do
     %{
       codigo_do_banco: convert_position(raw_string, 1, 3),
       lote: convert_position(raw_string, 4, 7),
@@ -51,7 +51,7 @@ defmodule Cnab.Cnab240.Templates.Footer do
     }
   end
 
-  defp total_info(raw_string) do
+  defp total_fields(raw_string) do
     %{
       qnt_lotes: convert_position(raw_string, 18, 23),
       qnt_registros: convert_position(raw_string, 24, 29),

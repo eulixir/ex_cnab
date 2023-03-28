@@ -65,10 +65,10 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
   def generate(array) do
     {:ok,
      Enum.map(array, fn raw_string ->
-       control_context = info_lines(raw_string)
-       service_context = service_lines(raw_string)
-       company = company_lines(raw_string)
-       company_address = company_address_lines(raw_string)
+       control_context = control_fields(raw_string)
+       service_context = service_fields(raw_string)
+       company = company_fields(raw_string)
+       company_address = company_address_fields(raw_string)
 
        %{
          controle: control_context,
@@ -83,7 +83,7 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
      end)}
   end
 
-  defp info_lines(raw_string) do
+  defp control_fields(raw_string) do
     %{
       banco: convert_position(raw_string, 1, 3),
       lote: convert_position(raw_string, 4, 7),
@@ -91,7 +91,7 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
     }
   end
 
-  defp service_lines(raw_string) do
+  defp service_fields(raw_string) do
     %{
       operacao: convert_position(raw_string, 9, 9),
       tipo_servico: convert_position(raw_string, 10, 11),
@@ -100,7 +100,7 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
     }
   end
 
-  defp company_lines(raw_string) do
+  defp company_fields(raw_string) do
     %{
       inscricao: %{
         tipo: convert_position(raw_string, 18, 18),
@@ -122,7 +122,7 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
     }
   end
 
-  defp company_address_lines(raw_string) do
+  defp company_address_fields(raw_string) do
     %{
       logradouro: convert_position(raw_string, 143, 172),
       numero: convert_position(raw_string, 173, 177),

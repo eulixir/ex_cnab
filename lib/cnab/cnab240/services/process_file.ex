@@ -6,7 +6,7 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
   alias Cnab.Cnab240.Templates.Footer
   alias Cnab.Cnab240.Templates.FileHeader
   alias Cnab.Cnab240.Templates.ChunkHeader
-  alias Cnab.Cnab240.Templates.ChunkFirstRegister
+  alias Cnab.Cnab240.Templates.Details
   alias Cnab.Cnab240.Services.GetFileInfo
 
   @item_type %{
@@ -32,7 +32,6 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
   defp process_file(file) do
     map =
       file.path
-      |> File.read!()
       |> String.split("\r\n")
       |> classify_by_type()
 
@@ -40,18 +39,16 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
 
     {:ok, file_header} = FileHeader.generate(map.file_header)
     {:ok, chunk_header} = ChunkHeader.generate(map.chunk_header)
-    banana = ChunkFirstRegister.generate(map.chunk_first_register)
+    {:ok, detail} = Details.generate(map.details)
     {:ok, footer} = Footer.generate(map.file_footer)
-
-    IO.inspect(banana)
 
     {:ok,
      %{
        arquivo: %{
          arquivo_header: file_header,
          lote_header: chunk_header,
-         trailer: footer
-         #  chunk_first_register: chunk_first_register
+         trailer: footer,
+         detalhes: detail
        },
        informacoes_extras: filename_info
      }}
@@ -61,16 +58,14 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
     array
     |> Enum.drop(-1)
     |> Enum.reduce(%{}, fn raw_string, acc ->
-      type =
-        verify_type(raw_string)
-        |> IO.inspect()
+      type = verify_type(raw_string)
 
       Map.update(acc, type, [raw_string], &(&1 ++ [raw_string]))
     end)
   end
 
   defp verify_type(raw_string) do
-    type = String.slice(raw_string, 8..8)
+    type = String.slice(raw_string, 7..7)
 
     @item_type[type]
   end
