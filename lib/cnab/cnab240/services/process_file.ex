@@ -20,16 +20,6 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
 
   @spec run(Plug.Upload.t()) :: {:ok, Map.t()} | {:error, Any.t()}
   def run(file) do
-    case String.contains?(file.filename, "REM") do
-      true ->
-        process_file(file)
-
-      false ->
-        {:error, %{status: 422, message: "Verify your filename, maybe something wen't wrong"}}
-    end
-  end
-
-  defp process_file(file) do
     map =
       file.path
       |> File.read!()
@@ -45,7 +35,7 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
 
     {:ok,
      %{
-       arquivo: %{
+       cnab240: %{
          arquivo_header: file_header,
          lote_header: chunk_header,
          trailer: footer,

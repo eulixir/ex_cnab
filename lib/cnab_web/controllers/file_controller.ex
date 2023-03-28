@@ -1,10 +1,10 @@
 defmodule CnabWeb.FileController do
   use Phoenix.Controller
 
-  alias Cnab.Cnab240.Services.ProcessFile
+  alias Cnab.Cnab240.Services.VerifyFile
 
   def validate_file_format(conn, params) do
-    {:ok, parser_file} = ProcessFile.run(params["file"])
+    {:ok, parser_file} = VerifyFile.run(params["file"])
 
     conn
     |> put_status(:ok)

@@ -23,7 +23,7 @@ defmodule Cnab.Cnab240.Templates.FileHeader do
   ├── Empresa
   │   ├── Inscrição
   │   │   ├── Tipo (18..18)
-  │   │   └──  Número de inscrição (19..32)
+  │   │   └── Número de inscrição (19..32)
   │   │
   │   ├── Convênio (33..52)
   │   │
@@ -95,15 +95,15 @@ defmodule Cnab.Cnab240.Templates.FileHeader do
         tipo_inscricao_empresa: convert_position(raw_string, 18, 18),
         numero_inscricao_empresa: convert_position(raw_string, 19, 32)
       },
-      checking_account: %{
-        codigo_convenio_no_banco: convert_position(raw_string, 33, 52),
+      codigo_convenio_no_banco: convert_position(raw_string, 33, 52),
+      conta_corrente: %{
         agencia_mantedora: convert_position(raw_string, 53, 57),
         digito_verificador_agencia: convert_position(raw_string, 58, 58),
         numero_conta_corrente: convert_position(raw_string, 59, 70),
         digito_verificador_conta: convert_position(raw_string, 71, 71),
-        digito_verificador_ag_conta: convert_position(raw_string, 72, 72),
-        nome_empresa: convert_position(raw_string, 73, 102)
-      }
+        digito_verificador_ag_conta: convert_position(raw_string, 72, 72)
+      },
+      nome_empresa: convert_position(raw_string, 73, 102)
     }
   end
 
