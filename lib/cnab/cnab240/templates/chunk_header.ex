@@ -62,25 +62,23 @@ defmodule Cnab.Cnab240.Templates.ChunkHeader do
   └── Ocorrências (231..240)
   """
 
-  def generate(array) do
-    {:ok,
-     Enum.map(array, fn raw_string ->
-       control_context = control_fields(raw_string)
-       service_context = service_fields(raw_string)
-       company = company_fields(raw_string)
-       company_address = company_address_fields(raw_string)
+  def generate(raw_string) do
+    control_context = control_fields(raw_string)
+    service_context = service_fields(raw_string)
+    company = company_fields(raw_string)
+    company_address = company_address_fields(raw_string)
 
-       %{
-         controle: control_context,
-         service: service_context,
-         uso_febraban_01: convert_position(raw_string, 17, 17),
-         empresa: company,
-         informacao_1: convert_position(raw_string, 103, 142),
-         endereco_empresa: company_address,
-         uso_febraban_02: convert_position(raw_string, 223, 230),
-         ocorrencias: convert_position(raw_string, 231, 240)
-       }
-     end)}
+    {:ok,
+     %{
+       controle: control_context,
+       service: service_context,
+       uso_febraban_01: convert_position(raw_string, 17, 17),
+       empresa: company,
+       informacao_1: convert_position(raw_string, 103, 142),
+       endereco_empresa: company_address,
+       uso_febraban_02: convert_position(raw_string, 223, 230),
+       ocorrencias: convert_position(raw_string, 231, 240)
+     }}
   end
 
   defp control_fields(raw_string) do

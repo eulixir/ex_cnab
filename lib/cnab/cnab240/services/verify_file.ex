@@ -26,7 +26,7 @@ defmodule Cnab.Cnab240.Services.VerifyFile do
        cooperativa: cooperativa,
        cliente: client,
        arquivo: filename,
-       credito_em_conta_corrente: "10.000R$",
+       credito_em_conta_corrente: processed_file,
        doc: "10.000R$",
        ordem_de_pagament_op: "10.000R$",
        ted: "10.000R$",

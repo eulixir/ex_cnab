@@ -6,8 +6,7 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
   alias Cnab.Cnab240.Services.Details
   alias Cnab.Cnab240.Templates.Footer
   alias Cnab.Cnab240.Templates.FileHeader
-  # alias Cnab.Cnab240.Templates.ChunkHeader
-  # alias Cnab.Cnab240.Templates.Details
+
   alias Cnab.Cnab240.Services.GetFileInfo
 
   @item_type %{
@@ -31,8 +30,6 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
 
     {:ok, file_header} = FileHeader.generate(map.file_header)
     {:ok, details} = Details.run(map.chunks)
-    # {:ok, chunk_header} = ChunkHeader.generate(map.chunk_header)
-    # {:ok, detail} = Details.generate(map.details)
     {:ok, footer} = Footer.generate(map.file_footer)
 
     {:ok,
@@ -51,43 +48,14 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
 
     file_footer = Enum.at(array, -2)
 
-    short_array =
+    shorted_array =
       array
       |> Enum.drop(1)
       |> Enum.drop(-2)
 
-    list_footer_index =
-      Enum.reduce(short_array, [], fn item, acc ->
-        case verify_type(item) do
-          :chunk_footer ->
-            index = Enum.find_index(short_array, &(&1 == item))
+    list_footer_index = get_footers_index(shorted_array)
 
-            acc ++ [index]
-
-          _ ->
-            acc
-        end
-      end)
-
-    chunks =
-      Enum.reduce(list_footer_index, {short_array, %{chunks: []}}, fn index,
-                                                                      {short_array_acc, map_acc} ->
-        footer = Enum.at(short_array, index - 1)
-
-        {[header | details], short_array} = Enum.split(short_array_acc, index)
-
-        key_name = Enum.find_index(list_footer_index, &(&1 == index)) + 1
-
-        new_map = %{
-          "chunk_register_#{key_name}": %{
-            header: header,
-            detail: details,
-            footer: footer
-          }
-        }
-
-        {short_array, Map.update(map_acc, :chunks, [new_map], &(&1 ++ [new_map]))}
-      end)
+    chunks = build_details_object(list_footer_index, shorted_array)
 
     %{file_header: file_header, file_footer: file_footer, chunks: chunks}
   end
@@ -96,5 +64,44 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
     type = String.slice(raw_string, 7..7)
 
     @item_type[type]
+  end
+
+  defp get_footers_index(shorted_array) do
+    Enum.reduce(shorted_array, [], fn item, acc ->
+      case verify_type(item) do
+        :chunk_footer ->
+          index = Enum.find_index(shorted_array, &(&1 == item))
+
+          acc ++ [index]
+
+        _ ->
+          acc
+      end
+    end)
+  end
+
+  defp build_details_object(list_footer_index, shorted_array) do
+    {_, details} =
+      Enum.reduce(list_footer_index, {shorted_array, %{chunks: []}}, fn index,
+                                                                        {list_acc, map_acc} ->
+        footer = Enum.at(shorted_array, index)
+
+        {[header | details], shorted_array} = Enum.split(list_acc, index)
+
+        details = Enum.drop(details, -1) |> Enum.drop(1)
+        key_id = Enum.find_index(list_footer_index, &(&1 == index)) + 1
+
+        new_map = %{
+          "chunk_register_#{key_id}": %{
+            header: header,
+            detail: details,
+            footer: footer
+          }
+        }
+
+        {shorted_array, Map.update(map_acc, :chunks, [new_map], &(&1 ++ [new_map]))}
+      end)
+
+    details
   end
 end
