@@ -29,8 +29,8 @@ defmodule Cnab.Cnab240.Templates.Footer do
   ```
   """
 
-  @spec generate(List.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def generate([raw_string | _tl]) do
+  @spec generate(String.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def generate(raw_string) do
     info = info_fields(raw_string)
     total = total_fields(raw_string)
 

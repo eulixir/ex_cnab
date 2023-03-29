@@ -110,7 +110,7 @@ defmodule Cnab.Cnab240.Templates.Details.ModelB do
     %{
       inscricao: %{
         tipo: convert_position(raw_string, 18),
-        numnero: convert_position(raw_string, 19, 32)
+        numero: convert_position(raw_string, 19, 32)
       },
       logradouro: convert_position(raw_string, 33, 62),
       numero: convert_position(raw_string, 63, 97),

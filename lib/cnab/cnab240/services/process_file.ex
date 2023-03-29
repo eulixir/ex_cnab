@@ -3,10 +3,11 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
   Service to read and generate info about the CNAB 240 file.
   """
 
+  alias Cnab.Cnab240.Services.Details
   alias Cnab.Cnab240.Templates.Footer
   alias Cnab.Cnab240.Templates.FileHeader
-  alias Cnab.Cnab240.Templates.ChunkHeader
-  alias Cnab.Cnab240.Templates.Details
+  # alias Cnab.Cnab240.Templates.ChunkHeader
+  # alias Cnab.Cnab240.Templates.Details
   alias Cnab.Cnab240.Services.GetFileInfo
 
   @item_type %{
@@ -29,30 +30,66 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
     {:ok, filename_info} = GetFileInfo.run(file.filename)
 
     {:ok, file_header} = FileHeader.generate(map.file_header)
-    {:ok, chunk_header} = ChunkHeader.generate(map.chunk_header)
-    {:ok, detail} = Details.generate(map.details)
+    {:ok, details} = Details.run(map.chunks)
+    # {:ok, chunk_header} = ChunkHeader.generate(map.chunk_header)
+    # {:ok, detail} = Details.generate(map.details)
     {:ok, footer} = Footer.generate(map.file_footer)
 
     {:ok,
      %{
        cnab240: %{
          arquivo_header: file_header,
-         lote_header: chunk_header,
-         trailer: footer,
-         detalhes: detail
+         detalhes: details,
+         trailer: footer
        },
        informacoes_extras: filename_info
      }}
   end
 
   defp classify_by_type(array) do
-    array
-    |> Enum.drop(-1)
-    |> Enum.reduce(%{}, fn raw_string, acc ->
-      type = verify_type(raw_string)
+    file_header = Enum.at(array, 0)
 
-      Map.update(acc, type, [raw_string], &(&1 ++ [raw_string]))
-    end)
+    file_footer = Enum.at(array, -2)
+
+    short_array =
+      array
+      |> Enum.drop(1)
+      |> Enum.drop(-2)
+
+    list_footer_index =
+      Enum.reduce(short_array, [], fn item, acc ->
+        case verify_type(item) do
+          :chunk_footer ->
+            index = Enum.find_index(short_array, &(&1 == item))
+
+            acc ++ [index]
+
+          _ ->
+            acc
+        end
+      end)
+
+    chunks =
+      Enum.reduce(list_footer_index, {short_array, %{chunks: []}}, fn index,
+                                                                      {short_array_acc, map_acc} ->
+        footer = Enum.at(short_array, index - 1)
+
+        {[header | details], short_array} = Enum.split(short_array_acc, index)
+
+        key_name = Enum.find_index(list_footer_index, &(&1 == index)) + 1
+
+        new_map = %{
+          "chunk_register_#{key_name}": %{
+            header: header,
+            detail: details,
+            footer: footer
+          }
+        }
+
+        {short_array, Map.update(map_acc, :chunks, [new_map], &(&1 ++ [new_map]))}
+      end)
+
+    %{file_header: file_header, file_footer: file_footer, chunks: chunks}
   end
 
   defp verify_type(raw_string) do
