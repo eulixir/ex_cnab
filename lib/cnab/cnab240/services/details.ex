@@ -1,4 +1,7 @@
 defmodule Cnab.Cnab240.Services.Details do
+  @moduledoc """
+  Service to generate a details
+  """
   alias Cnab.Cnab240.Templates.ChunkHeader
   alias Cnab.Cnab240.Templates.Details
   alias Cnab.Cnab240.Templates.ChunkFooter
@@ -58,14 +61,14 @@ defmodule Cnab.Cnab240.Services.Details do
       "18": %{
         code: :tributo_darf_simples,
         descricao: "Tributo DARF Simples"
-      },
-      "03": %{
-        code: :pagamento_salario,
-        descricao: "Pagamento Salários/Folha de Pagamento",
-        "01": %{
-          code: :credito_conta,
-          descricao: "Crédito em Conta-Corrente"
-        }
+      }
+    },
+    "30": %{
+      code: :pagamento_salario,
+      descricao: "Pagamento Salários/Folha de Pagamento",
+      "01": %{
+        code: :credito_conta,
+        descricao: "Crédito em Conta-Corrente"
       }
     }
   }

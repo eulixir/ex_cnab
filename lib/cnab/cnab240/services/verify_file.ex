@@ -4,17 +4,11 @@ defmodule Cnab.Cnab240.Services.VerifyFile do
   """
   alias Cnab.Cnab240.Services.ProcessFile
 
-  @spec run(Plug.Upload.t()) :: {:ok, Map.t()} | {:error, Any.t()}
+  @spec run(Plug.Upload.t()) :: {:ok, Map.t()}
   def run(file) do
-    case String.contains?(file.filename, "REM") do
-      true ->
-        file
-        |> ProcessFile.run()
-        |> build_response(file)
-
-      false ->
-        {:error, %{status: 422, message: "Check your filename, maybe something is wrong"}}
-    end
+    file
+    |> ProcessFile.run()
+    |> build_response(file)
   end
 
   defp build_response({:ok, processed_file}, %{filename: filename}) do

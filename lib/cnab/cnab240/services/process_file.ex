@@ -53,9 +53,10 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
       |> Enum.drop(1)
       |> Enum.drop(-2)
 
-    list_footer_index = get_footers_index(shorted_array)
-
-    chunks = build_details_object(list_footer_index, shorted_array)
+    chunks =
+      shorted_array
+      |> get_footers_index()
+      |> build_details_object(shorted_array)
 
     %{file_header: file_header, file_footer: file_footer, chunks: chunks}
   end
