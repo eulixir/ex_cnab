@@ -18,19 +18,37 @@ defmodule Cnab.Cnab240.Services.VerifyFile do
   end
 
   defp build_response({:ok, processed_file}, %{filename: filename}) do
-    client = processed_file.cnab240.arquivo_header.empresa.nome_empresa
-    cooperativa = processed_file.cnab240.arquivo_header.nome_banco
+    cnab240 = processed_file.cnab240
+    client = cnab240.arquivo_header.empresa.nome_empresa
+    cooperativa = cnab240.arquivo_header.nome_banco
 
-    {:ok,
-     %{
-       cooperativa: cooperativa,
-       cliente: client,
-       arquivo: filename,
-       credito_em_conta_corrente: processed_file,
-       doc: "10.000R$",
-       ordem_de_pagament_op: "10.000R$",
-       ted: "10.000R$",
-       pix: "10.000R$"
-     }}
+    amount = amount_template(cnab240.detalhes)
+
+    {
+      :ok,
+      %{
+        cooperativa: cooperativa,
+        cliente: client,
+        arquivo: filename,
+        totais: amount
+      }
+    }
+  end
+
+  @payment_template %{
+    doc: 0,
+    op: 0,
+    ted: 0,
+    pix: 0,
+    credito_conta: 0
+  }
+  defp amount_template(details) do
+    Enum.reduce(details, @payment_template, fn detail, acc ->
+      %{quantidade: amount, tipo: transaction_type} = detail.valor
+
+      amount = String.to_integer(amount)
+
+      Map.update(acc, transaction_type, amount, &(&1 + amount))
+    end)
   end
 end
