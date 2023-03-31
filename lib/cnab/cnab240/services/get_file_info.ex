@@ -19,7 +19,8 @@ defmodule Cnab.Cnab240.Services.GetFileInfo do
        codigo_convenio: convert_position(filename, 1, 3),
        dia_geracao_arquivo: convert_position(filename, 4, 5),
        codigo_mes_geracao_arquivo: convert_position(filename, 6),
-       sequencia_arquivo: convert_position(filename, 7, 8)
+       sequencia_arquivo: convert_position(filename, 7, 8),
+       nome_arquivo: filename
      }}
   end
 
@@ -28,7 +29,8 @@ defmodule Cnab.Cnab240.Services.GetFileInfo do
      %{
        codigo_convenio: convert_position(filename, 1, 4),
        dia_geracao_arquivo: convert_position(filename, 5, 6),
-       sequencia_arquivo: convert_position(filename, 7, 8)
+       sequencia_arquivo: convert_position(filename, 7, 8),
+       nome_arquivo: filename
      }}
   end
 end
