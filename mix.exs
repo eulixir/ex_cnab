@@ -4,11 +4,14 @@ defmodule Cnab.MixProject do
   def project do
     [
       app: :cnab,
-      version: "0.1.0",
+      version: "0.0.1",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      description: description(),
       aliases: aliases(),
+      package: package(),
+      licenses: ["MIT"],
       deps: deps()
     ]
   end
@@ -21,6 +24,15 @@ defmodule Cnab.MixProject do
       mod: {Cnab.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
+  end
+
+  defp description() do
+    "A CNAB file helper. This library aims to help your bank or cooperative read, decode, display,
+    and perform various operations on a CNAB file.
+
+    Supported operations:
+    - Read CNAB240 file
+    - Return some data"
   end
 
   # Specifies which paths to compile per environment.
@@ -43,7 +55,8 @@ defmodule Cnab.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
@@ -59,6 +72,15 @@ defmodule Cnab.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+    ]
+  end
+
+  defp package() do
+    [
+      files: ~w(lib .formatter.exs mix.exs README LICENSE*
+                 CHANGELOG),
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => "https://github.com/joaopelaves/cnab"}
     ]
   end
 end
