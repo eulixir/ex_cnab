@@ -90,7 +90,12 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
                                                                         {list_acc, map_acc} ->
         footer = Enum.at(shorted_array, index)
 
-        {[header | details], shorted_array} = Enum.split(list_acc, index + 1)
+        footer_index =
+          list_acc
+          |> get_footers_index()
+          |> hd()
+
+        {[header | details], shorted_array} = Enum.split(list_acc, footer_index + 1)
 
         details = Enum.drop(details, -1) |> Enum.drop(1)
         key_id = Enum.find_index(list_footer_index, &(&1 == index)) + 1
