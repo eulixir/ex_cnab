@@ -18,15 +18,18 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
     "9" => :file_footer
   }
 
-  @spec run(Plug.Upload.t()) :: {:ok, Map.t()} | {:error, Any.t()}
+  @spec run(String.t()) :: {:ok, Map.t()} | {:error, Any.t()}
   def run(file) do
     map =
-      file.path
+      file
       |> File.read!()
       |> String.split("\r\n")
       |> classify_by_type()
 
-    {:ok, filename_info} = GetFileInfo.run(file.filename)
+    {:ok, filename_info} =
+      file
+      |> Path.basename()
+      |> GetFileInfo.run()
 
     {:ok, file_header} = FileHeader.generate(map.file_header)
     {:ok, details} = Details.run(map.chunks)

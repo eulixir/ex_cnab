@@ -4,14 +4,14 @@ defmodule Cnab.Cnab240.Services.VerifyFile do
   """
   alias Cnab.Cnab240.Services.ProcessFile
 
-  @spec run(Plug.Upload.t()) :: {:ok, Map.t()}
+  @spec run(String.t()) :: {:ok, Map.t()}
   def run(file) do
     file
     |> ProcessFile.run()
-    |> build_response(file)
+    |> build_response()
   end
 
-  defp build_response({:ok, processed_file}, %{filename: filename}) do
+  defp build_response({:ok, processed_file}) do
     cnab240 = processed_file.cnab240
     client = cnab240.arquivo_header.empresa.nome_empresa
     cooperativa = cnab240.arquivo_header.nome_banco
@@ -23,7 +23,7 @@ defmodule Cnab.Cnab240.Services.VerifyFile do
       %{
         cooperativa: cooperativa,
         cliente: client,
-        arquivo: filename,
+        arquivo: processed_file.informacoes_extras.nome_arquivo,
         totais: amount
       }
     }
