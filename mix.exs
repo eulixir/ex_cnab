@@ -58,7 +58,8 @@ defmodule Cnab.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      test: ["test"]
+      test: ["test"],
+      scripts: ["run -r \"priv/scripts/**/*.exs\""]
     ]
   end
 
