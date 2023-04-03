@@ -65,7 +65,7 @@ defmodule ExCnab.MixProject do
 
   defp package() do
     [
-      files: ~w(app .formatter.exs mix.exs README LICENSE*
+      files: ~w(app .formatter.exs mix.exs README.md LICENSE*
                  CHANGELOG),
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/joaopealves/ex_cnab"}
