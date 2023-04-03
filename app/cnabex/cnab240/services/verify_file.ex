@@ -2,12 +2,12 @@ defmodule ExCnab.Cnab240.Services.VerifyFile do
   @moduledoc """
   Service to verify file and return some fields to client
   """
-  alias ExCnab.Cnab240.Services.ProcessFile
+  import ExCnab
 
-  @spec run(String.t()) :: {:ok, Map.t()}
-  def run(file) do
+  @spec run(String.t(), Map.t()) :: {:ok, Map.t()}
+  def run(file, _attrs) do
     file
-    |> ProcessFile.run()
+    |> decode(%{})
     |> build_response()
   end
 

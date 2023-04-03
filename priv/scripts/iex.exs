@@ -1,3 +1,5 @@
+import ExCnab
+
 "../documents/JVH30016.txt"
-|> ExCnab.Cnab240.Services.VerifyFile.run()
+|> get_decoded_file(%{})
 |> IO.inspect()
