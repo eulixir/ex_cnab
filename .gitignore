@@ -23,7 +23,7 @@ erl_crash.dump
 /tmp/
 
 # Ignore package tarball (built via "mix hex.build").
-excnab-*.tar
+ex_cnab-*.tar
 
 
 .DS_Store
