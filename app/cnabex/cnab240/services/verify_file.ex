@@ -1,8 +1,8 @@
-defmodule Cnab.Cnab240.Services.VerifyFile do
+defmodule ExCnab.Cnab240.Services.VerifyFile do
   @moduledoc """
   Service to verify file and return some fields to client
   """
-  alias Cnab.Cnab240.Services.ProcessFile
+  alias ExCnab.Cnab240.Services.ProcessFile
 
   @spec run(String.t()) :: {:ok, Map.t()}
   def run(file) do

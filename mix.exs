@@ -1,10 +1,10 @@
-defmodule Cnab.MixProject do
+defmodule ExCnab.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :cnab,
-      version: "0.1.3",
+      app: :ex_cnab,
+      version: "0.4.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -21,7 +21,7 @@ defmodule Cnab.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Cnab.Application, []},
+      mod: {ExCnab.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -36,8 +36,8 @@ defmodule Cnab.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  defp elixirc_paths(:test), do: ["app", "test/support"]
+  defp elixirc_paths(_), do: ["app"]
 
   # Specifies your project dependencies.
   #
@@ -65,10 +65,10 @@ defmodule Cnab.MixProject do
 
   defp package() do
     [
-      files: ~w(lib .formatter.exs mix.exs README LICENSE*
+      files: ~w(app .formatter.exs mix.exs README LICENSE*
                  CHANGELOG),
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/joaopelaves/cnab"}
+      links: %{"GitHub" => "https://github.com/joaopealves/ex_cnab"}
     ]
   end
 end

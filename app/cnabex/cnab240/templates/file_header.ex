@@ -1,4 +1,4 @@
-defmodule Cnab.Cnab240.Templates.FileHeader do
+defmodule ExCnab.Cnab240.Templates.FileHeader do
   @moduledoc """
   Template for rendering a cnab240 header from a file
   """
