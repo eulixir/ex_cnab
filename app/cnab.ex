@@ -1,4 +1,4 @@
-defmodule Cnab do
+defmodule ExCnab do
   @moduledoc """
   Cnab keeps the contexts that define your domain
   and business logic.

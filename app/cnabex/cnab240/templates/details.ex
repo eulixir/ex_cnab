@@ -1,8 +1,8 @@
-defmodule Cnab.Cnab240.Templates.Details do
+defmodule ExCnab.Cnab240.Templates.Details do
   @moduledoc """
 
   """
-  alias Cnab.Cnab240.Templates.Details.{ModelA, ModelB, ModelO, ModelJ}
+  alias ExCnab.Cnab240.Templates.Details.{ModelA, ModelB, ModelO, ModelJ}
   import Helpers.ConvertPosition
 
   @spec generate(List.t()) :: {:ok, List.t(Map.t())}

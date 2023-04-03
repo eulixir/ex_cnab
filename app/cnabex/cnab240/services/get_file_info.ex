@@ -1,4 +1,4 @@
-defmodule Cnab.Cnab240.Services.GetFileInfo do
+defmodule ExCnab.Cnab240.Services.GetFileInfo do
   @moduledoc """
   Service to get file infos from filename
   """

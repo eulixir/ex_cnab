@@ -1,4 +1,4 @@
-defmodule Cnab.Cnab240.Templates.Details.ModelO do
+defmodule ExCnab.Cnab240.Templates.Details.ModelO do
   @moduledoc """
   Template to generate an cnab 240 object from file, following the A-segment pattern;
   """

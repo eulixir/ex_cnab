@@ -1,10 +1,10 @@
-defmodule Cnab.Cnab240.Services.Details do
+defmodule ExCnab.Cnab240.Services.Details do
   @moduledoc """
   Service to generate a details
   """
-  alias Cnab.Cnab240.Templates.ChunkHeader
-  alias Cnab.Cnab240.Templates.Details
-  alias Cnab.Cnab240.Templates.ChunkFooter
+  alias ExCnab.Cnab240.Templates.ChunkHeader
+  alias ExCnab.Cnab240.Templates.Details
+  alias ExCnab.Cnab240.Templates.ChunkFooter
 
   @payment_mapper %{
     "03": %{

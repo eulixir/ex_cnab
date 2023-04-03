@@ -1,4 +1,4 @@
-defmodule Cnab.Cnab240.Templates.Footer do
+defmodule ExCnab.Cnab240.Templates.Footer do
   @moduledoc """
   Template for rendering a cnab240 footer from a file
   """

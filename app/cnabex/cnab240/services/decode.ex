@@ -1,13 +1,13 @@
-defmodule Cnab.Cnab240.Services.ProcessFile do
+defmodule ExCnab.Cnab240.Services.Decode do
   @moduledoc """
   Service to read and generate info about the CNAB 240 file.
   """
 
-  alias Cnab.Cnab240.Services.Details
-  alias Cnab.Cnab240.Templates.Footer
-  alias Cnab.Cnab240.Templates.FileHeader
+  alias ExCnab.Cnab240.Services.Details
+  alias ExCnab.Cnab240.Templates.Footer
+  alias ExCnab.Cnab240.Templates.FileHeader
 
-  alias Cnab.Cnab240.Services.GetFileInfo
+  alias ExCnab.Cnab240.Services.GetFileInfo
 
   @item_type %{
     "0" => :file_header,
@@ -18,8 +18,8 @@ defmodule Cnab.Cnab240.Services.ProcessFile do
     "9" => :file_footer
   }
 
-  @spec run(String.t()) :: {:ok, Map.t()} | {:error, Any.t()}
-  def run(file) do
+  @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, Any.t()}
+  def run(file, _attrs) do
     map =
       file
       |> File.read!()
