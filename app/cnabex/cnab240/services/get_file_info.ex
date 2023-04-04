@@ -5,12 +5,14 @@ defmodule ExCnab.Cnab240.Services.GetFileInfo do
 
   import Helpers.ConvertPosition
 
-  @spec run(String.t()) :: {:ok, Map.t()}
-  def run(filename) do
-    filename
+  @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def run(filename, attrs) do
+    params = Map.get(attrs, :filename, filename)
+
+    params
     |> String.slice(0..3)
     |> String.match?(~r/\d+/)
-    |> filename_template(filename)
+    |> filename_template(params)
   end
 
   defp filename_template(true, filename) do

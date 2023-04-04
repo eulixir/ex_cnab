@@ -73,7 +73,8 @@ defmodule ExCnab.Cnab240.Services.Details do
     }
   }
 
-  def run(%{chunks: chunks}) do
+  @spec run(Map.t(), Map.t()) :: {:ok, Map.t()}
+  def run(%{chunks: chunks}, _attrs) do
     {:ok,
      Enum.map(chunks, fn detail ->
        index = Enum.find_index(chunks, &(&1 == detail)) + 1

@@ -61,8 +61,8 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
   ```
   """
 
-  @spec generate(String.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def generate(raw_string) do
+  @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def generate(raw_string, _attrs) do
     control_fields = control_fields(raw_string)
     company_fields = company_fields(raw_string)
     about_fields = about_fields(raw_string)

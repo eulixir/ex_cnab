@@ -19,7 +19,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
   }
 
   @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, Any.t()}
-  def run(file, _attrs) do
+  def run(file, attrs) do
     map =
       file
       |> File.read!()
@@ -29,11 +29,11 @@ defmodule ExCnab.Cnab240.Services.Decode do
     {:ok, filename_info} =
       file
       |> Path.basename()
-      |> GetFileInfo.run()
+      |> GetFileInfo.run(attrs)
 
-    {:ok, file_header} = FileHeader.generate(map.file_header)
-    {:ok, details} = Details.run(map.chunks)
-    {:ok, footer} = Footer.generate(map.file_footer)
+    {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
+    {:ok, details} = Details.run(map.chunks, attrs)
+    {:ok, footer} = Footer.generate(map.file_footer, attrs)
 
     {:ok,
      %{
