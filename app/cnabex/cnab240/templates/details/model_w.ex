@@ -1,6 +1,6 @@
-defmodule ExCnab.Cnab240.Templates.Details.ModelO do
+defmodule ExCnab.Cnab240.Templates.Details.ModelW do
   @moduledoc """
-  Template to generate an cnab 240 object from file, following the O-segment pattern;
+  Template to generate an cnab 240 object from file, following the W-segment pattern;
   """
   import Helpers.ConvertPosition
 
@@ -48,14 +48,21 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelO do
   def generate(raw_string) do
     control_field = control_field(raw_string)
     service_field = service_field(raw_string)
-    payment_field = payment_field(raw_string)
+    info_field = build_infos_field(raw_string)
 
     {:ok,
      %{
        controle: control_field,
        servico: service_field,
-       pagamento: payment_field,
-       cnab: convert_position(raw_string, 163, 230),
+       complemento_registro: convert_position(raw_string, 15),
+       cnidentifica_infomacoes_1_e_2: convert_position(raw_string, 16),
+       infomraca_complementar_1: convert_position(raw_string, 17, 96),
+       infomraca_complementar_2: convert_position(raw_string, 87, 176),
+       infomraca_complementar_3: %{
+         identificador_tributo: convert_position(raw_string, 177, 178),
+         informacao_complementar_tributo: info_field
+       },
+       reservado: convert_position(raw_string, 229, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
      }}
   end
@@ -71,23 +78,19 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelO do
   defp service_field(raw_string) do
     %{
       n_registro: convert_position(raw_string, 9, 13),
-      segmento: convert_position(raw_string, 14),
-      movimento: %{
-        tipo: convert_position(raw_string, 15),
-        codigo: convert_position(raw_string, 16, 17)
-      }
+      segmento: convert_position(raw_string, 14)
     }
   end
 
-  defp payment_field(raw_string) do
+  defp build_infos_field(raw_string) do
     %{
-      codigo_de_barra: convert_position(raw_string, 18, 61),
-      nome_concessionaria: convert_position(raw_string, 62, 91),
-      data_vencimento: convert_position(raw_string, 92, 99),
-      data_pagamento: convert_position(raw_string, 100, 107),
-      valor_pagamento: convert_position(raw_string, 108, 122),
-      seu_numero: convert_position(raw_string, 123, 142),
-      nosso_numero: convert_position(raw_string, 143, 162)
+      receita: convert_position(raw_string, 179, 184),
+      tipo_id_contribuinte: convert_position(raw_string, 186),
+      id_contribuinte: convert_position(raw_string, 187, 200),
+      identificador: convert_position(raw_string, 201, 216),
+      lacre: convert_position(raw_string, 217, 225),
+      digito_lacre: convert_position(raw_string, 226, 227),
+      reservado: convert_position(raw_string, 228)
     }
   end
 end

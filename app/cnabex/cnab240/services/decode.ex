@@ -4,8 +4,8 @@ defmodule ExCnab.Cnab240.Services.Decode do
   """
 
   alias ExCnab.Cnab240.Services.Details
-  alias ExCnab.Cnab240.Templates.Footer
   alias ExCnab.Cnab240.Templates.FileHeader
+  alias ExCnab.Cnab240.Templates.Footer
 
   alias ExCnab.Cnab240.Services.GetFileInfo
 

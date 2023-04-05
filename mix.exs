@@ -4,7 +4,7 @@ defmodule ExCnab.MixProject do
   def project do
     [
       app: :ex_cnab,
-      version: "0.4.2",
+      version: "0.5.1",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -45,7 +45,8 @@ defmodule ExCnab.MixProject do
   defp deps do
     [
       {:jason, "~> 1.2"},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
