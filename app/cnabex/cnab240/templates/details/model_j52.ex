@@ -1,6 +1,6 @@
-defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
+defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
   @moduledoc """
-  Template to generate an cnab 240 object from file, following the J-segment pattern;
+  Template to generate an cnab 240 object from file, following the J 52 -segment pattern;
   """
   import Helpers.ConvertPosition
 

@@ -32,9 +32,8 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
   └── Ocorrências (231..240)
   ```
   """
-
-  @spec generate(String.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def generate(raw_string) do
+  @spec generate(String.t(), String.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def generate("J52", raw_string) do
     control_field = control_fields(raw_string)
     total = total_fields(raw_string)
 
@@ -43,25 +42,40 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
        controle: control_field,
        uso_febraban_1: convert_position(raw_string, 9, 17),
        total: total,
-       numero_aviso_previo: convert_position(raw_string, 60, 65),
+       numero_aviso_debito: convert_position(raw_string, 60, 65),
        uso_febraban_2: convert_position(raw_string, 66, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
      }}
   end
 
-  defp control_fields(raw_string) do
-    %{
-      codigo_do_banco: convert_position(raw_string, 1, 3),
-      lote: convert_position(raw_string, 4, 7),
-      registro: convert_position(raw_string, 8, 8)
-    }
-  end
+  def generate(_, raw_string) do
+    control_field = control_fields(raw_string)
+    total = total_fields(raw_string)
 
-  defp total_fields(raw_string) do
+    {:ok,
     %{
-      qnt_registros: convert_position(raw_string, 18, 23),
-      valor: convert_position(raw_string, 24, 41),
-      qnt_moeda: convert_position(raw_string, 42, 59)
-    }
+      controle: control_field,
+      uso_febraban_1: convert_position(raw_string, 9, 17),
+      total: total,
+      numero_aviso_previo: convert_position(raw_string, 60, 65),
+      uso_febraban_2: convert_position(raw_string, 66, 230),
+      ocorrencias: convert_position(raw_string, 231, 240)
+      }}
+    end
+
+    defp control_fields(raw_string) do
+      %{
+        codigo_do_banco: convert_position(raw_string, 1, 3),
+        lote: convert_position(raw_string, 4, 7),
+        registro: convert_position(raw_string, 8, 8)
+      }
+    end
+
+    defp total_fields(raw_string) do
+      %{
+        qnt_registros: convert_position(raw_string, 18, 23),
+        valor: convert_position(raw_string, 24, 41),
+        qnt_moeda: convert_position(raw_string, 42, 59)
+      }
+    end
   end
-end
