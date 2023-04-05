@@ -46,6 +46,33 @@ defmodule ExCnab.Cnab240.Services.Decode do
      }}
   end
 
+  @spec run!(String.t(), Map.t()) :: Map.t() | {:error, Any.t()}
+  def run!(file, attrs) do
+    map =
+      file
+      |> File.read!()
+      |> String.split("\r\n")
+      |> classify_by_type()
+
+    {:ok, filename_info} =
+      file
+      |> Path.basename()
+      |> GetFileInfo.run(attrs)
+
+    {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
+    {:ok, details} = Details.run(map.chunks, attrs)
+    {:ok, footer} = Footer.generate(map.file_footer, attrs)
+
+    %{
+      cnab240: %{
+        arquivo_header: file_header,
+        detalhes: details,
+        trailer: footer
+      },
+      informacoes_extras: filename_info
+    }
+  end
+
   defp classify_by_type(array) do
     file_header = Enum.at(array, 0)
 
