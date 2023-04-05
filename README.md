@@ -13,9 +13,8 @@ In `mix.exs`, add the ExMachina dependency:
 
 ```elixir
 def deps do
-  # Get the latest from hex.pm. Works with Ecto 3.0
   [
-    {:cnab, "~> 0.4.1"},
+    {:cnab, "~> 0.5.1"},
   ]
 end
 ```
@@ -30,7 +29,7 @@ Read and Build info from file:
 defmodule MyApp.CnabParser do
   import ExCnab
 
-  def get_data_from_file(filepath), do: decode(filepath)
+  def run(filepath), do: decode(filepath, %{})
 end
 
 output:
