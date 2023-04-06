@@ -81,7 +81,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelO do
 
   defp payment_field(raw_string) do
     %{
-      codigo_de_barra: convert_position(raw_string, 18, 61),
+      codigo_de_barras: convert_position(raw_string, 18, 61),
       nome_concessionaria: convert_position(raw_string, 62, 91),
       data_vencimento: convert_position(raw_string, 92, 99),
       data_pagamento: convert_position(raw_string, 100, 107),
@@ -89,5 +89,54 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelO do
       seu_numero: convert_position(raw_string, 123, 142),
       nosso_numero: convert_position(raw_string, 143, 162)
     }
+  end
+
+  def encode(detail) do
+    %{
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento,
+        movimento: %{
+          tipo: tipo_movimento,
+          codigo: codigo_movimento
+        }
+      },
+      pagamento: %{
+        codigo_de_barras: codigo_de_barras,
+        nome_concessionaria: nome_concessionaria,
+        data_vencimento: data_vencimento,
+        data_pagamento: data_pagamento,
+        valor_pagamento: valor_pagamento,
+        seu_numero: seu_numero,
+        nosso_numero: nosso_numero
+      },
+      cnab: cnab,
+      ocorrencias: ocorrencias
+    } = detail
+
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      tipo_movimento,
+      codigo_movimento,
+      codigo_de_barras,
+      nome_concessionaria,
+      data_vencimento,
+      data_pagamento,
+      valor_pagamento,
+      seu_numero,
+      nosso_numero,
+      cnab,
+      ocorrencias
+    ]
+    |> Enum.join()
   end
 end

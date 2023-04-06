@@ -37,9 +37,9 @@ defmodule ExCnab.Cnab240.Templates.Footer do
     {:ok,
      %{
        controle: info,
-       uso_febraban_1: convert_position(raw_string, 9, 17),
+       uso_febraban_01: convert_position(raw_string, 9, 17),
        total: total,
-       uso_febraban_2: convert_position(raw_string, 36, 240)
+       uso_febraban_02: convert_position(raw_string, 36, 240)
      }}
   end
 
@@ -57,5 +57,31 @@ defmodule ExCnab.Cnab240.Templates.Footer do
       qnt_registros: convert_position(raw_string, 24, 29),
       contas_para_conc: convert_position(raw_string, 30, 35)
     }
+  end
+
+  @spec encode(footer :: Map.t()) :: String.t()
+  def encode(params) do
+    %{
+      controle: %{codigo_do_banco: codigo_do_banco, lote: lote, registro: registro},
+      total: %{
+        contas_para_conc: contas_para_conc,
+        qnt_lotes: qnt_lotes,
+        qnt_registros: qnt_registros
+      },
+      uso_febraban_01: uso_febraban_01,
+      uso_febraban_02: uso_febraban_02
+    } = params
+
+    [
+      codigo_do_banco,
+      lote,
+      registro,
+      uso_febraban_01,
+      qnt_lotes,
+      qnt_registros,
+      contas_para_conc,
+      uso_febraban_02
+    ]
+    |> Enum.join()
   end
 end

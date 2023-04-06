@@ -133,4 +133,77 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
       multa: convert_position(raw_string, 196, 210)
     }
   end
+
+  def encode(detail) do
+    %{
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento
+      },
+      cnab: cnab_01,
+      dados_complementares: %{
+        favorecido: %{
+          inscricao: %{
+            tipo: tipo_inscicao,
+            numero: numero_inscricao
+          },
+          logradouro: logradouro,
+          numero: numero,
+          complemento: complemento,
+          bairro: bairro,
+          cidade: cidade,
+          cep: cep,
+          complemento_cep: complemento_cep,
+          estado: estado
+        },
+        pagto: %{
+          vencimento: vencimento,
+          valor_documento: valor_documento,
+          abatimento: abatimento,
+          desconto: desconto,
+          mora: mora,
+          multa: multa
+        },
+        cod_favorecido: cod_favorecido
+      },
+      aviso: aviso,
+      codigo_ug_centralizadora: codigo_ug_centralizadora,
+      id_banco_spb: id_banco_spb
+    } = detail
+
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      cnab_01,
+      tipo_inscicao,
+      numero_inscricao,
+      logradouro,
+      numero,
+      complemento,
+      bairro,
+      cidade,
+      cep,
+      complemento_cep,
+      estado,
+      vencimento,
+      valor_documento,
+      abatimento,
+      desconto,
+      mora,
+      multa,
+      cod_favorecido,
+      aviso,
+      codigo_ug_centralizadora,
+      id_banco_spb
+    ]
+    |> Enum.join()
+  end
 end

@@ -3,7 +3,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
   Service to read and generate info about the CNAB 240 file.
   """
 
-  alias ExCnab.Cnab240.Services.Details
+  alias ExCnab.Cnab240.Services.BuildDetails
   alias ExCnab.Cnab240.Templates.FileHeader
   alias ExCnab.Cnab240.Templates.Footer
 
@@ -32,7 +32,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
       |> GetFileInfo.run(attrs)
 
     {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
-    {:ok, details} = Details.run(map.chunks, attrs)
+    {:ok, details} = BuildDetails.run(map.chunks, attrs)
     {:ok, footer} = Footer.generate(map.file_footer, attrs)
 
     {:ok,
@@ -60,7 +60,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
       |> GetFileInfo.run(attrs)
 
     {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
-    {:ok, details} = Details.run(map.chunks, attrs)
+    {:ok, details} = BuildDetails.run(map.chunks, attrs)
     {:ok, footer} = Footer.generate(map.file_footer, attrs)
 
     %{

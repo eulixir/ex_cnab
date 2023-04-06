@@ -1,11 +1,21 @@
 import ExCnab
 
-  {:ok, decoded} =
+  {:ok, decoded1} =
     "../documents/JVH30016.txt"
     |> decode(%{})
+    |> IO.inspect()
 
 
-  decoded.cnab240.arquivo_header
+  decoded1.cnab240
   |> encode!(%{})
-  |> ExCnab.Cnab240.Templates.FileHeader.generate(%{})
-  |> IO.inspect()
+
+
+  {:ok, decoded2} =
+    "./priv/docs/banana.rem"
+    |> decode(%{})
+    |> IO.inspect()
+
+
+  case decoded1 == decoded2 do
+    banaa -> IO.inspect(banaa)
+  end

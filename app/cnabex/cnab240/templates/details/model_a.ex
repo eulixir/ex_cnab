@@ -150,4 +150,91 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelA do
       valor_real: convert_position(raw_string, 163, 177)
     }
   end
+
+  def encode(detail) do
+    %{
+      controle: %{
+        banco: controle_banco,
+        lote: lote,
+        registro: tipo_registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento,
+        movimento: %{
+          tipo: tipo_movimento,
+          codigo: tipo_codigo
+        }
+      },
+      favorecido: %{
+        camara: camara,
+        banco: codigo_banco,
+        conta_corrente: %{
+          agencia: %{
+            codigo: agencia_codigo,
+            dv: agencia_dv
+          },
+          conta: %{
+            numero: conta_numero,
+            dv: conta_dv
+          },
+          dv: dv
+        },
+        nome: nome,
+        seu_numero: seu_numero
+      },
+      credito: %{
+        data_pagamento: data_pagamento,
+        moeda: %{
+          tipo: tipo_moeda,
+          quantidade: quantidade
+        },
+        valor_pagamento: valor_pagamento,
+        nosso_numero: nosso_numero,
+        data_real: data_real,
+        valor_real: valor_real
+      },
+      informação_02: informação_02,
+      codigo_finalidade_doc: codigo_finalidade_doc,
+      codigo_finalidade_ted: codigo_finalidade_ted,
+      codigo_finalidade_finalidade_complementar: codigo_finalidade_finalidade_complementar,
+      cnab: cnab,
+      aviso: aviso,
+      ocorrencias: ocorrencias
+    } = detail
+
+    [
+      controle_banco,
+      lote,
+      tipo_registro,
+      n_registro,
+      segmento,
+      tipo_movimento,
+      tipo_codigo,
+      camara,
+      codigo_banco,
+      agencia_codigo,
+      agencia_dv,
+      conta_numero,
+      conta_dv,
+      dv,
+      nome,
+      seu_numero,
+      data_pagamento,
+      tipo_moeda,
+      quantidade,
+      valor_pagamento,
+      nosso_numero,
+      data_real,
+      valor_real,
+      informação_02,
+      codigo_finalidade_doc,
+      codigo_finalidade_ted,
+      codigo_finalidade_finalidade_complementar,
+      cnab,
+      aviso,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
 end
