@@ -144,7 +144,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
           dv: dv_agencia_conta
         },
         convenio: convenio,
-        inscricao: %{numero: inscricao_numero, tipo: tipo_inscricao},
+        inscricao: %{numero: numero_inscricao, tipo: tipo_inscricao},
         nome: empresa_nome
       },
       endereco_empresa: %{
@@ -178,10 +178,10 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
       layout_lote,
       cnab_01,
       tipo_inscricao,
-      inscricao_numero,
+      numero_inscricao,
       convenio,
-      agencia_dv,
       codigo,
+      agencia_dv,
       numero_conta,
       conta_dv,
       dv_agencia_conta,

@@ -190,6 +190,5 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       uso_febraban_03
     ]
     |> Enum.join()
-    |> IO.inspect()
   end
 end
