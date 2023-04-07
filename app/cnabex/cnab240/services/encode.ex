@@ -7,7 +7,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
   alias ExCnab.Cnab240.Templates.Footer
   alias ExCnab.Cnab240.Templates.FileHeader
 
-  @spec run(params :: String.t(), attrs :: Map.t()) :: {:ok, String.t()}
+  # @spec run(params :: String.t(), attrs :: Map.t()) :: {:ok, String.t()}
   def run(%{arquivo_header: header, details: details, trailer: footer}, _attrs) do
     encoded_header = FileHeader.encode(header)
     encoded_details = EncodeDetails.run(details)
@@ -22,7 +22,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
   end
 
   @spec run!(params :: Map.t(), attrs :: Map.t()) :: String.t()
-  def run!(%{arquivo_header: header, details: details, trailer: footer}, _attrs) do
+  def run!(%{arquivo_header: header, detalhes: details, trailer: footer}, _attrs) do
     encoded_header = FileHeader.encode(header)
     encoded_details = EncodeDetails.run(details)
     encoded_footer = Footer.encode(footer)

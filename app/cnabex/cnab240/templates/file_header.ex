@@ -98,7 +98,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       codigo_convenio_no_banco: convert_position(raw_string, 33, 52),
       conta_corrente: %{
         agencia: %{
-          agencia_mantedora: convert_position(raw_string, 53, 57),
+          codigo_agencia: convert_position(raw_string, 53, 57),
           digito_verificador_agencia: convert_position(raw_string, 58, 58)
         },
         conta: %{
@@ -137,7 +137,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
 
     %{
       agencia: %{
-        agencia_mantedora: agencia_mantedora,
+        codigo_agencia: codigo_agencia,
         digito_verificador_agencia: digito_verificador_agencia
       },
       conta: %{
@@ -168,13 +168,13 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       lote,
       registro,
       uso_febraban_01,
-      numero_inscricao_empresa,
       tipo_inscricao_empresa,
+      numero_inscricao_empresa,
       codigo_convenio_no_banco,
-      agencia_mantedora,
+      codigo_agencia,
       digito_verificador_agencia,
-      digito_verificador_conta,
       numero_conta_corrente,
+      digito_verificador_conta,
       digito_verificador_ag_conta,
       nome_empresa,
       nome_banco,
@@ -190,5 +190,6 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       uso_febraban_03
     ]
     |> Enum.join()
+    |> IO.inspect()
   end
 end
