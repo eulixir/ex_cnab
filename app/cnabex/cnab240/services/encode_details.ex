@@ -6,7 +6,7 @@ defmodule ExCnab.Cnab240.Services.EncodeDetails do
   alias ExCnab.Cnab240.Templates.Details
   alias ExCnab.Cnab240.Templates.ChunkHeader
 
-  # @spec encode(List.t()) :: {:ok, List.t(Map.t())}
+  @spec run(List.t()) :: List.t(Map.t())
   def run(details) do
     Enum.map(details, fn detail ->
       %{header_lote: header, lotes: details, trailer_lote: footer} = detail
@@ -19,5 +19,6 @@ defmodule ExCnab.Cnab240.Services.EncodeDetails do
 
       [encoded_header, encoded_detail, encoded_footer] |> Enum.join("\r\n")
     end)
+    |> Enum.join("\r\n")
   end
 end

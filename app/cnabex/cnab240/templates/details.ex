@@ -11,7 +11,7 @@ defmodule ExCnab.Cnab240.Templates.Details do
         {:ok, detail_object} =
           register_detail
           |> convert_position(14)
-          |> payment_template(register_detail, :generate)
+          |> payment_template(:generate, register_detail)
 
         detail_object
       end)
@@ -24,12 +24,12 @@ defmodule ExCnab.Cnab240.Templates.Details do
     Enum.map(details, fn detail ->
       detail.servico.segmento
 
-      payment_template(detail.servico.segmento, detail, :encode)
+      payment_template(detail.servico.segmento, :encode, detail)
     end)
     |> Enum.join("\r\n")
   end
 
-  defp payment_template(type, regsiter_detail, function) do
+  defp payment_template(type, function, regsiter_detail) do
     apply(:"Elixir.ExCnab.Cnab240.Templates.Details.Model#{type}", function, [regsiter_detail])
   end
 end

@@ -27,10 +27,10 @@ defmodule ExCnab.Cnab240.Services.Encode do
     encoded_details = EncodeDetails.run(details)
     encoded_footer = Footer.encode(footer)
 
-    raw = [encoded_header, encoded_details, encoded_footer] |> Enum.join("\r\n")
+    raw = [encoded_header, encoded_details, encoded_footer, ""] |> Enum.join("\r\n")
 
-    File.rm("./priv/docs/banana.rem")
-    File.write("./priv/docs/banana.rem", raw)
+    File.rm("../documents/banana.txt")
+    File.write("../documents/banana.txt", raw)
 
     raw
   end

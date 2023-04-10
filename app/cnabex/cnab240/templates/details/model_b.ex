@@ -113,8 +113,8 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
         numero: convert_position(raw_string, 19, 32)
       },
       logradouro: convert_position(raw_string, 33, 62),
-      numero: convert_position(raw_string, 63, 97),
-      complemento: convert_position(raw_string, 98, 117),
+      numero: convert_position(raw_string, 63, 67),
+      complemento: convert_position(raw_string, 68, 82),
       bairro: convert_position(raw_string, 83, 97),
       cidade: convert_position(raw_string, 98, 117),
       cep: convert_position(raw_string, 118, 122),

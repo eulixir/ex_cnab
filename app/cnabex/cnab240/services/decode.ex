@@ -124,7 +124,8 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
         {[header | details], shorted_array} = Enum.split(list_acc, footer_index + 1)
 
-        details = Enum.drop(details, -1) |> Enum.drop(1)
+        details = Enum.drop(details, -1)
+
         key_id = Enum.find_index(list_footer_index, &(&1 == index)) + 1
 
         new_map = %{
