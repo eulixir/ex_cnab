@@ -14,20 +14,20 @@ In `mix.exs`, add the ExMachina dependency:
 ```elixir
 def deps do
   [
-    {:cnab, "~> 0.5.1"},
+    {:cnab, "~> 1.0.0"},
   ]
 end
 ```
 
 ## Overview
 
-[Check out the docs](https://hexdocs.pm/ex_machina/ExMachina.html) for more details.
+[Check out the docs](https://hexdocs.pm/ex_cnab/ExCnab.html) for more details.
 
 Read and Build info from file:
 
 ```elixir
 defmodule MyApp.CnabParser do
-  import ExCnab
+  import ExCnab240
 
   def run(filepath), do: decode(filepath, %{})
 end
@@ -48,6 +48,18 @@ output:
           # Content
         }
       }}
+```
+
+```elixir
+defmodule MyApp.CnabParser do
+  import ExCnab240
+
+  def run(decoded_cnab), do: encode(decoded_cnab, %{})
+end
+
+output:
+
+    {:ok, %{content: "xxxx...", filename: "JHVAABBDD.ret"}}
 ```
 
 ## Contributing
