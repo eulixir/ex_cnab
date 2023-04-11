@@ -4,7 +4,7 @@ defmodule ExCnab.MixProject do
   def project do
     [
       app: :ex_cnab,
-      version: "0.5.1",
+      version: "1.0.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
