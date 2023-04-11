@@ -7,27 +7,29 @@ defmodule ExCnab.Cnab240.Services.Encode do
   alias ExCnab.Cnab240.Templates.Footer
   alias ExCnab.Cnab240.Templates.FileHeader
 
-  @spec run(params :: Map.t(), attrs :: Map.t()) :: {:ok, String.t()}
+  @spec run(params :: Map.t(), attrs :: Map.t()) ::
+          {:ok, %{content: String.t(), filename: String.t()}}
   def run(%{arquivo_header: header, details: details, trailer: footer}, attrs) do
     raw = encode_content(header, details, footer)
 
-    path =
+    filename =
       header.empresa.codigo_convenio_banco
       |> String.trim(" ")
       |> build_filename(attrs)
-      |> create_file(raw, attrs)
 
-    {:ok, path}
+    {:ok, %{content: raw, filename: filename}}
   end
 
-  @spec run!(params :: Map.t(), attrs :: Map.t()) :: String.t()
+  @spec run!(params :: Map.t(), attrs :: Map.t()) :: %{content: String.t(), filename: String.t()}
   def run!(%{arquivo_header: header, detalhes: details, trailer: footer}, attrs) do
     raw = encode_content(header, details, footer)
 
-    header.empresa.codigo_convenio_banco
-    |> String.trim(" ")
-    |> build_filename(attrs)
-    |> create_file(raw, attrs)
+    filename =
+      header.empresa.codigo_convenio_banco
+      |> String.trim(" ")
+      |> build_filename(attrs)
+
+    %{content: raw, filename: filename}
   end
 
   defp encode_content(header, details, footer) do
@@ -45,20 +47,5 @@ defmodule ExCnab.Cnab240.Services.Encode do
       DateTime.utc_now() |> DateTime.add(-3, :hour)
 
     [code, day, month, hour, minute, ".RET"] |> Enum.join()
-  end
-
-  defp create_file(filename, raw, %{path: path}) do
-    File.rm("#{path}#{filename}")
-    File.write("#{path}#{filename}", raw)
-
-    path
-  end
-
-  @path "./priv/docs/banana.rem"
-  defp create_file(filename, raw, _attrs) do
-    File.rm("#{@path}#{filename}")
-    File.write("#{@path}#{filename}", raw)
-
-    @path
   end
 end
