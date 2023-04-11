@@ -1,5 +1,11 @@
 import ExCnab
 
-"../documents/JVH30016.txt"
-|> decode(%{})
-|> IO.inspect()
+  {:ok, decoded1} =
+    "../documents/JVH05041742.RET"
+    |> decode(%{})
+
+  decoded1.cnab240
+  |> encode!(%{})
+
+  "../documents/banana.txt"
+  |> decode(%{})

@@ -62,6 +62,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
   └── Ocorrências (231..240)
   """
 
+  @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
     control_context = control_fields(raw_string)
     service_context = service_fields(raw_string)
@@ -130,5 +131,72 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
       complemento_cep: convert_position(raw_string, 218, 220),
       estado: convert_position(raw_string, 221, 222)
     }
+  end
+
+  @spec encode(Map.t()) :: String.t()
+  def encode(params) do
+    %{
+      controle: %{banco: banco, lote: lote, registro: registro},
+      empresa: %{
+        conta_corrente: %{
+          agencia: %{codigo: codigo, dv: agencia_dv},
+          conta_corrente: %{dv: conta_dv, numero: numero_conta},
+          dv: dv_agencia_conta
+        },
+        convenio: convenio,
+        inscricao: %{numero: numero_inscricao, tipo: tipo_inscricao},
+        nome: empresa_nome
+      },
+      endereco_empresa: %{
+        cep: cep,
+        cidade: cidade,
+        complemento: complemento,
+        complemento_cep: complemento_cep,
+        estado: estado,
+        logradouro: logradouro,
+        numero: numero_endereco
+      },
+      informacao_1: informacao_01,
+      ocorrencias: ocorrencias,
+      service: %{
+        forma_lancamento: forma_lancamento,
+        layout_lote: layout_lote,
+        operacao: operacao,
+        tipo_servico: tipo_servico
+      },
+      uso_febraban_01: cnab_01,
+      uso_febraban_02: cnab_02
+    } = params
+
+    [
+      banco,
+      lote,
+      registro,
+      operacao,
+      tipo_servico,
+      forma_lancamento,
+      layout_lote,
+      cnab_01,
+      tipo_inscricao,
+      numero_inscricao,
+      convenio,
+      codigo,
+      agencia_dv,
+      numero_conta,
+      conta_dv,
+      dv_agencia_conta,
+      empresa_nome,
+      informacao_01,
+      logradouro,
+      numero_endereco,
+      complemento,
+      cidade,
+      cep,
+      complemento_cep,
+      estado,
+      cnab_02,
+      ocorrencias
+    ]
+    |> Enum.join()
   end
 end

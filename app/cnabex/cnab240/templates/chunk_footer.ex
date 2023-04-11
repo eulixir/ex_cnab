@@ -78,4 +78,70 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
       qnt_moeda: convert_position(raw_string, 42, 59)
     }
   end
+
+  def encode("J52", footer) do
+    %{
+      controle: %{
+        codigo_do_banco: codigo_do_banco,
+        lote: lote,
+        registro: registro
+      },
+      uso_febraban_1: uso_febraban_1,
+      total: %{
+        qnt_registros: qnt_registros,
+        valor: valor,
+        qnt_moeda: qnt_moeda
+      },
+      numero_aviso_debito: numero_aviso_debito,
+      uso_febraban_2: uso_febraban_2,
+      ocorrencias: ocorrencias
+    } = footer
+
+    [
+      codigo_do_banco,
+      lote,
+      registro,
+      uso_febraban_1,
+      qnt_registros,
+      valor,
+      qnt_moeda,
+      numero_aviso_debito,
+      uso_febraban_2,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
+
+  def encode(_type, footer) do
+    %{
+      controle: %{
+        codigo_do_banco: codigo_do_banco,
+        lote: lote,
+        registro: registro
+      },
+      uso_febraban_1: uso_febraban_1,
+      total: %{
+        qnt_registros: qnt_registros,
+        valor: valor,
+        qnt_moeda: qnt_moeda
+      },
+      numero_aviso_previo: numero_aviso_previo,
+      uso_febraban_2: uso_febraban_2,
+      ocorrencias: ocorrencias
+    } = footer
+
+    [
+      codigo_do_banco,
+      lote,
+      registro,
+      uso_febraban_1,
+      qnt_registros,
+      valor,
+      qnt_moeda,
+      numero_aviso_previo,
+      uso_febraban_2,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
 end

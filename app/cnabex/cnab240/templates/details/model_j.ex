@@ -53,19 +53,17 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   def generate(raw_string) do
     control_field = control_field(raw_string)
     service_field = service_field(raw_string)
-    drawer_field = drawer_field(raw_string)
-    beneficiary_field = beneficiary_field(raw_string)
-    drawer_voucher_field = drawer_voucher_field(raw_string)
+    payment_field = payment_field(raw_string)
 
     {:ok,
      %{
        controle: control_field,
        servico: service_field,
-       dados_sacador: drawer_field,
-       dados_beneficiario: beneficiary_field,
-       dados_sacador_avalista: drawer_voucher_field,
-       cod_reg: convert_position(raw_string, 18, 19),
-       cnab: convert_position(raw_string, 188, 240)
+       pagamento: payment_field,
+       nosso_numero: convert_position(raw_string, 203, 222),
+       codigo_modeda: convert_position(raw_string, 223, 224),
+       ocorrencias: convert_position(raw_string, 225, 230),
+       cnab: convert_position(raw_string, 231, 240)
      }}
   end
 
@@ -81,38 +79,85 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
     %{
       n_registro: convert_position(raw_string, 9, 13),
       segmento: convert_position(raw_string, 14),
-      cnab: convert_position(raw_string, 15),
-      cod_mov: convert_position(raw_string, 16, 17)
+      movimento: %{
+        tipo: convert_position(raw_string, 15),
+        codigo: convert_position(raw_string, 16, 17)
+      }
     }
   end
 
-  defp drawer_field(raw_string) do
+  defp payment_field(raw_string) do
     %{
-      inscricao: %{
-        tipo: convert_position(raw_string, 20),
-        number: convert_position(raw_string, 21, 35)
-      },
-      nome: convert_position(raw_string, 36, 75)
+      codigo_de_barras: convert_position(raw_string, 18, 61),
+      nome_beneficiario: convert_position(raw_string, 62, 91),
+      data_vencimento: convert_position(raw_string, 92, 99),
+      valor_do_titulo: convert_position(raw_string, 100, 114),
+      desconto: convert_position(raw_string, 115, 129),
+      acrescimos: convert_position(raw_string, 130, 144),
+      data_pagamento: convert_position(raw_string, 145, 152),
+      valor_pagamento: convert_position(raw_string, 153, 167),
+      quantidade_da_moeda: convert_position(raw_string, 168, 182),
+      referencia_sacado: convert_position(raw_string, 183, 202)
     }
   end
 
-  defp drawer_voucher_field(raw_string) do
+  @spec encode(detail :: Map.t()) :: String.t()
+  def encode(detail) do
     %{
-      inscricao: %{
-        tipo: convert_position(raw_string, 76),
-        number: convert_position(raw_string, 77, 91)
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
       },
-      nome: convert_position(raw_string, 92, 131)
-    }
-  end
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento,
+        movimento: %{
+          tipo: tipo_movimento,
+          codigo: codigo_movimento
+        }
+      },
+      pagamento: %{
+        codigo_de_barras: codigo_de_barras,
+        nome_beneficiario: nome_beneficiario,
+        data_vencimento: data_vencimento,
+        valor_do_titulo: valor_do_titulo,
+        desconto: desconto,
+        acrescimos: acrescimos,
+        data_pagamento: data_pagamento,
+        valor_pagamento: valor_pagamento,
+        quantidade_da_moeda: quantidade_da_moeda,
+        referencia_sacado: referencia_sacado
+      },
+      nosso_numero: nosso_numero,
+      codigo_modeda: codigo_modeda,
+      cnab: cnab,
+      ocorrencias: ocorrencias
+    } = detail
 
-  defp beneficiary_field(raw_string) do
-    %{
-      inscricao: %{
-        tipo: convert_position(raw_string, 132),
-        number: convert_position(raw_string, 133, 147)
-      },
-      nome: convert_position(raw_string, 148, 187)
-    }
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      tipo_movimento,
+      codigo_movimento,
+      codigo_de_barras,
+      nome_beneficiario,
+      data_vencimento,
+      valor_do_titulo,
+      desconto,
+      acrescimos,
+      data_pagamento,
+      valor_pagamento,
+      quantidade_da_moeda,
+      referencia_sacado,
+      nosso_numero,
+      codigo_modeda,
+      cnab,
+      ocorrencias
+    ]
+    |> Enum.join()
   end
 end

@@ -1,4 +1,4 @@
-defmodule ExCnab.Cnab240.Services.Details do
+defmodule ExCnab.Cnab240.Services.BuildDetails do
   @moduledoc """
   Service to generate a details
   """

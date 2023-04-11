@@ -95,12 +95,16 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
         tipo_inscricao_empresa: convert_position(raw_string, 18, 18),
         numero_inscricao_empresa: convert_position(raw_string, 19, 32)
       },
-      codigo_convenio_no_banco: convert_position(raw_string, 33, 52),
+      codigo_convenio_banco: convert_position(raw_string, 33, 52),
       conta_corrente: %{
-        agencia_mantedora: convert_position(raw_string, 53, 57),
-        digito_verificador_agencia: convert_position(raw_string, 58, 58),
-        numero_conta_corrente: convert_position(raw_string, 59, 70),
-        digito_verificador_conta: convert_position(raw_string, 71, 71),
+        agencia: %{
+          codigo_agencia: convert_position(raw_string, 53, 57),
+          digito_verificador_agencia: convert_position(raw_string, 58, 58)
+        },
+        conta: %{
+          numero_conta_corrente: convert_position(raw_string, 59, 70),
+          digito_verificador_conta: convert_position(raw_string, 71, 71)
+        },
         digito_verificador_ag_conta: convert_position(raw_string, 72, 72)
       },
       nome_empresa: convert_position(raw_string, 73, 102)
@@ -116,5 +120,75 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       numero_versao_leiaute: convert_position(raw_string, 164, 166),
       densidade_arquivo: convert_position(raw_string, 167, 171)
     }
+  end
+
+  @spec encode(header :: Map.t()) :: String.t()
+  def encode(%{arquivo: file, controle: control, empresa: company} = params) do
+    %{codigo_do_banco: codigo_do_banco, lote: lote, registro: registro} = control
+
+    %{
+      codigo_remessa_retorno: codigo_remessa_retorno,
+      data_geracao_arquivo: data_geracao_arquivo,
+      hora_geracao_arquivo: hora_geracao_arquivo,
+      numero_sequencial_arquivo: numero_sequencial_arquivo,
+      numero_versao_leiaute: numero_versao_leiaute,
+      densidade_arquivo: densidade_arquivo
+    } = file
+
+    %{
+      agencia: %{
+        codigo_agencia: codigo_agencia,
+        digito_verificador_agencia: digito_verificador_agencia
+      },
+      conta: %{
+        digito_verificador_conta: digito_verificador_conta,
+        numero_conta_corrente: numero_conta_corrente
+      },
+      digito_verificador_ag_conta: digito_verificador_ag_conta
+    } = company.conta_corrente
+
+    %{
+      numero_inscricao_empresa: numero_inscricao_empresa,
+      tipo_inscricao_empresa: tipo_inscricao_empresa
+    } = company.inscricao
+
+    %{nome_empresa: nome_empresa, codigo_convenio_banco: codigo_convenio_banco} = company
+
+    %{
+      uso_empresa: uso_empresa,
+      uso_banco: uso_banco,
+      nome_banco: nome_banco,
+      uso_febraban_01: uso_febraban_01,
+      uso_febraban_02: uso_febraban_02,
+      uso_febraban_03: uso_febraban_03
+    } = params
+
+    [
+      codigo_do_banco,
+      lote,
+      registro,
+      uso_febraban_01,
+      tipo_inscricao_empresa,
+      numero_inscricao_empresa,
+      codigo_convenio_banco,
+      codigo_agencia,
+      digito_verificador_agencia,
+      numero_conta_corrente,
+      digito_verificador_conta,
+      digito_verificador_ag_conta,
+      nome_empresa,
+      nome_banco,
+      uso_febraban_02,
+      codigo_remessa_retorno,
+      data_geracao_arquivo,
+      hora_geracao_arquivo,
+      numero_sequencial_arquivo,
+      numero_versao_leiaute,
+      densidade_arquivo,
+      uso_banco,
+      uso_empresa,
+      uso_febraban_03
+    ]
+    |> Enum.join()
   end
 end

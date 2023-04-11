@@ -3,7 +3,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
   Service to read and generate info about the CNAB 240 file.
   """
 
-  alias ExCnab.Cnab240.Services.Details
+  alias ExCnab.Cnab240.Services.BuildDetails
   alias ExCnab.Cnab240.Templates.FileHeader
   alias ExCnab.Cnab240.Templates.Footer
 
@@ -32,7 +32,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
       |> GetFileInfo.run(attrs)
 
     {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
-    {:ok, details} = Details.run(map.chunks, attrs)
+    {:ok, details} = BuildDetails.run(map.chunks, attrs)
     {:ok, footer} = Footer.generate(map.file_footer, attrs)
 
     {:ok,
@@ -44,6 +44,33 @@ defmodule ExCnab.Cnab240.Services.Decode do
        },
        informacoes_extras: filename_info
      }}
+  end
+
+  @spec run!(String.t(), Map.t()) :: Map.t() | {:error, Any.t()}
+  def run!(file, attrs) do
+    map =
+      file
+      |> File.read!()
+      |> String.split("\r\n")
+      |> classify_by_type()
+
+    {:ok, filename_info} =
+      file
+      |> Path.basename()
+      |> GetFileInfo.run(attrs)
+
+    {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
+    {:ok, details} = BuildDetails.run(map.chunks, attrs)
+    {:ok, footer} = Footer.generate(map.file_footer, attrs)
+
+    %{
+      cnab240: %{
+        arquivo_header: file_header,
+        detalhes: details,
+        trailer: footer
+      },
+      informacoes_extras: filename_info
+    }
   end
 
   defp classify_by_type(array) do
@@ -97,7 +124,8 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
         {[header | details], shorted_array} = Enum.split(list_acc, footer_index + 1)
 
-        details = Enum.drop(details, -1) |> Enum.drop(1)
+        details = Enum.drop(details, -1)
+
         key_id = Enum.find_index(list_footer_index, &(&1 == index)) + 1
 
         new_map = %{
