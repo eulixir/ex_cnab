@@ -3,7 +3,7 @@
 ExCnab makes it easy to read and process CNAB files.
 
 > **This README follows the main branch, which may not be the currently published version**. Here are the
-> [docs for the latest published version of ExCnab](https://hexdocs.pm/ex_cnab/ExCnab.html).
+> [docs for the latest published version of ExCnab](https://hexdocs.pm/ex_cnab/ExCnab240.html).
 
 ## Installation
 
@@ -21,7 +21,7 @@ end
 
 ## Overview
 
-[Check out the docs](https://hexdocs.pm/ex_cnab/ExCnab.html) for more details.
+[Check out the docs](https://hexdocs.pm/ex_cnab/ExCnab240.html) for more details.
 
 Read and Build info from file:
 
