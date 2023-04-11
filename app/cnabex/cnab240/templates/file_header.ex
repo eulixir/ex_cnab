@@ -95,7 +95,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
         tipo_inscricao_empresa: convert_position(raw_string, 18, 18),
         numero_inscricao_empresa: convert_position(raw_string, 19, 32)
       },
-      codigo_convenio_no_banco: convert_position(raw_string, 33, 52),
+      codigo_convenio_banco: convert_position(raw_string, 33, 52),
       conta_corrente: %{
         agencia: %{
           codigo_agencia: convert_position(raw_string, 53, 57),
@@ -152,7 +152,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       tipo_inscricao_empresa: tipo_inscricao_empresa
     } = company.inscricao
 
-    %{nome_empresa: nome_empresa, codigo_convenio_no_banco: codigo_convenio_no_banco} = company
+    %{nome_empresa: nome_empresa, codigo_convenio_banco: codigo_convenio_banco} = company
 
     %{
       uso_empresa: uso_empresa,
@@ -170,7 +170,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
       uso_febraban_01,
       tipo_inscricao_empresa,
       numero_inscricao_empresa,
-      codigo_convenio_no_banco,
+      codigo_convenio_banco,
       codigo_agencia,
       digito_verificador_agencia,
       numero_conta_corrente,

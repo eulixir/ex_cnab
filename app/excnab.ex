@@ -65,20 +65,26 @@ defmodule ExCnab do
   Encode a single file.
   This will encode your params to a one CNAB file applying the correct format to each CNAB 240 template
   ### Example
-      encode(%{cnab: cnab}, %{filetype: :ret})
-      {:ok, "JVH1234.ret"}
+      encode(%{cnab: cnab}, %{filename: "JVH1010101.ret, path: "../../docs/"})
+      {:ok, "../../docs/"}
 
-      encode(%{cnab: cnab}, %{filetype: :rem})
-      {:ok, "JVH1234.rem"}
+      encode(%{cnab: cnab}, %{})
+      {:ok, "../../default/"}
+
+      encode!(%{cnab: cnab}, %{filename: "JVH1010101.ret, path: "../../docs/"})
+      "../../docs/"
+
+      encode!(%{cnab: cnab}, %{})
+      "../../default/"
   """
   @callback encode(params :: Map.t()) :: any
-  @callback encode(params :: Map.t(), attrs :: keyword | map) :: {:ok, any}
+  @callback encode(params :: Map.t(), attrs :: keyword | map) :: {:ok, path :: String.t()}
   def encode(params, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Encode.run(params, attrs)
   end
 
   @callback encode(params :: Map.t()) :: any
-  @callback encode(params :: Map.t(), attrs :: keyword | map) :: any
+  @callback encode(params :: Map.t(), attrs :: keyword | map) :: path :: String.t()
   def encode!(params, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Encode.run!(params, attrs)
   end

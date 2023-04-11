@@ -7,31 +7,58 @@ defmodule ExCnab.Cnab240.Services.Encode do
   alias ExCnab.Cnab240.Templates.Footer
   alias ExCnab.Cnab240.Templates.FileHeader
 
-  # @spec run(params :: String.t(), attrs :: Map.t()) :: {:ok, String.t()}
-  def run(%{arquivo_header: header, details: details, trailer: footer}, _attrs) do
-    encoded_header = FileHeader.encode(header)
-    encoded_details = EncodeDetails.run(details)
-    encoded_footer = Footer.encode(footer)
+  @spec run(params :: Map.t(), attrs :: Map.t()) :: {:ok, String.t()}
+  def run(%{arquivo_header: header, details: details, trailer: footer}, attrs) do
+    raw = encode_content(header, details, footer)
 
-    raw = [encoded_header, encoded_details, encoded_footer] |> Enum.join("\r\n")
+    path =
+      header.empresa.codigo_convenio_banco
+      |> String.trim(" ")
+      |> build_filename(attrs)
+      |> create_file(raw, attrs)
 
-    File.rm("./priv/docs/banana.rem")
-    File.write("./priv/docs/banana.rem", raw)
-
-    {:ok, raw}
+    {:ok, path}
   end
 
   @spec run!(params :: Map.t(), attrs :: Map.t()) :: String.t()
-  def run!(%{arquivo_header: header, detalhes: details, trailer: footer}, _attrs) do
+  def run!(%{arquivo_header: header, detalhes: details, trailer: footer}, attrs) do
+    raw = encode_content(header, details, footer)
+
+    header.empresa.codigo_convenio_banco
+    |> String.trim(" ")
+    |> build_filename(attrs)
+    |> create_file(raw, attrs)
+  end
+
+  defp encode_content(header, details, footer) do
     encoded_header = FileHeader.encode(header)
     encoded_details = EncodeDetails.run(details)
     encoded_footer = Footer.encode(footer)
 
-    raw = [encoded_header, encoded_details, encoded_footer, ""] |> Enum.join("\r\n")
+    [encoded_header, encoded_details, encoded_footer, ""] |> Enum.join("\r\n")
+  end
 
-    File.rm("../documents/banana.txt")
-    File.write("../documents/banana.txt", raw)
+  defp build_filename(_code, %{filename: filename}), do: filename
 
-    raw
+  defp build_filename(code, _attrs) do
+    %{hour: hour, minute: minute, month: month, day: day} =
+      DateTime.utc_now() |> DateTime.add(-3, :hour)
+
+    [code, day, month, hour, minute, ".RET"] |> Enum.join()
+  end
+
+  defp create_file(filename, raw, %{path: path}) do
+    File.rm("#{path}#{filename}")
+    File.write("#{path}#{filename}", raw)
+
+    path
+  end
+
+  @path "./priv/docs/banana.rem"
+  defp create_file(filename, raw, _attrs) do
+    File.rm("#{@path}#{filename}")
+    File.write("#{@path}#{filename}", raw)
+
+    @path
   end
 end
