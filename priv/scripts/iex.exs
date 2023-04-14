@@ -1,4 +1,4 @@
-import ExCnab
+import ExCnab240
 
   {:ok, decoded1} =
     "../documents/JVH05041742.RET"

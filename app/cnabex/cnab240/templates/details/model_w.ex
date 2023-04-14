@@ -56,9 +56,9 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
        servico: service_field,
        complemento_registro: convert_position(raw_string, 15),
        cnidentifica_infomacoes_1_e_2: convert_position(raw_string, 16),
-       infomraca_complementar_1: convert_position(raw_string, 17, 96),
-       infomraca_complementar_2: convert_position(raw_string, 87, 176),
-       infomraca_complementar_3: %{
+       informacao_complementar_1: convert_position(raw_string, 17, 96),
+       informacao_complementar_2: convert_position(raw_string, 87, 176),
+       informacao_complementar_3: %{
          identificador_tributo: convert_position(raw_string, 177, 178),
          informacao_complementar_tributo: info_field
        },
