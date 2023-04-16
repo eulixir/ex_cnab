@@ -93,4 +93,59 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
       reservado: convert_position(raw_string, 228)
     }
   end
+
+  def encode(detail) do
+    %{
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento
+      },
+      complemento_registro: complemento_registro,
+      identifica_uso_infomacoes_1_e_2: identifica_uso_infomacoes_1_e_2,
+      informacao_complementar_1: informacao_complementar_1,
+      informacao_complementar_2: informacao_complementar_2,
+      informacao_complementar_3: %{
+        identificador_tributo: indentificador_tributo,
+        informacao_complementar_tributo: %{
+          receita: receita,
+          tipo_id_contribuinte: tipo_id_contribuinte,
+          id_contribuinte: id_contribuinte,
+          identificador: identificador,
+          lacre: lacre,
+          digito_lacre: digito_lacre,
+          reservado: reservado_01
+        }
+      },
+      reservado: reservado_02,
+      ocorrencias: ocorrencias
+    } = detail
+
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      complemento_registro,
+      identifica_uso_infomacoes_1_e_2,
+      informacao_complementar_1,
+      informacao_complementar_2,
+      indentificador_tributo,
+      receita,
+      tipo_id_contribuinte,
+      id_contribuinte,
+      identificador,
+      lacre,
+      digito_lacre,
+      reservado_01,
+      reservado_02,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
 end
