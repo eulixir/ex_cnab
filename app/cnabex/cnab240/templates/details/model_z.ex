@@ -60,4 +60,35 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelZ do
       segmento: convert_position(raw_string, 14)
     }
   end
+
+  def encode(details) do
+    %{
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento
+      },
+      autenticacao: autenticacao,
+      controle_bancario: controle_bancario,
+      reservado: reservado,
+      ocorrencias: ocorrencias
+    } = details
+
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      autenticacao,
+      controle_bancario,
+      reservado,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
 end

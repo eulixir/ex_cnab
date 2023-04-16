@@ -116,7 +116,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
     }
   end
 
-  defp encode(detail) do
+  def encode(detail) do
     %{
       controle: %{
         banco: banco,
@@ -151,9 +151,29 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
         nome: nome_sacador_avalista
       },
       cod_reg: cod_reg,
-      cnab: cnab_02
+      cnab: cnab
     } = detail
 
-    [banco, lote, registro, n_registro, segmento, cnab_01, cod_mov] |> Enum.join()
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      cnab_01,
+      cod_mov,
+      cod_reg,
+      tipo_sacador,
+      numero_sacador,
+      nome_sacador,
+      tipo_beneficiario,
+      numero_beneficiario,
+      nome_beneficiario,
+      tipo_sacador_avalista,
+      numero_sacador_avalista,
+      nome_sacador_avalista,
+      cnab
+    ]
+    |> Enum.join()
   end
 end
