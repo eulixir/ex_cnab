@@ -9,3 +9,6 @@ import ExCnab240
 
   "../documents/banana.txt"
   |> decode(%{})
+
+  decoded1
+  |> find_details_type()

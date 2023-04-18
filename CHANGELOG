@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version History
 
+- 1.1.0 (2023-18-04)
 - 1.0.1 (2023-14-04)
 - 1.0.0 (2023-11-04)
 - 0.5.1 (2023-05-04)
@@ -18,3 +19,5 @@ All notable changes to this project will be documented in this file.
 - Create the project
 - Can read a Cnab240 file
 - Add macros
+- Can generate a cnab from params file
+- Can get details type of a cnab

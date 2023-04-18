@@ -28,6 +28,14 @@ defmodule ExCnab240 do
       def encode!(params, attrs \\ %{}) do
         ExCnab240.encode(params, attrs)
       end
+
+      def find_details_type(params, attrs \\ %{}) do
+        ExCnab240.find_details_type(params, attrs)
+      end
+
+      def find_details_type!(params, attrs \\ %{}) do
+        ExCnab240.find_details_type(params, attrs)
+      end
     end
   end
 
@@ -93,5 +101,31 @@ defmodule ExCnab240 do
               %{filename: String.t(), content: String.t()}
   def encode!(params, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Encode.run!(params, attrs)
+  end
+
+  @doc """
+  Find all details types from a CNAB 240 file
+  The funtion will recieve a map with the cnab 240 file decoded and will return a list with all details types
+  ### Example
+      import ExCnab240
+
+      find_details_type(cnab_file)
+      {:ok, ["A", "B"]}
+
+      find_details_type!(cnab_file)
+      ["A", "B"]
+  """
+  @callback find_details_type(params :: Map.t()) :: any
+  @callback find_details_type(params :: Map.t()) ::
+              {:ok, %{filename: String.t(), content: String.t()}}
+  def find_details_type(params) do
+    ExCnab.Cnab240.Services.FindDetailsTypes.run(params)
+  end
+
+  @callback find_details_type(params :: Map.t()) :: any
+  @callback find_details_type(params :: Map.t()) ::
+              %{filename: String.t(), content: String.t()}
+  def find_details_type!(params) do
+    ExCnab.Cnab240.Services.FindDetailsTypes.run!(params)
   end
 end
