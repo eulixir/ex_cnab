@@ -14,7 +14,7 @@ In `mix.exs`, add the ExMachina dependency:
 ```elixir
 def deps do
   [
-    {:ex_cnab, "~> 1.0.1"},
+    {:ex_cnab, "~> 1.1.0"},
   ]
 end
 ```
@@ -60,6 +60,19 @@ end
 output:
 
     {:ok, %{content: "xxxx...", filename: "JHVAABBDD.ret"}}
+```
+
+```elixir
+defmodule MyApp.GetDetailsType do
+  import ExCnab240
+
+  def run(decoded_cnab), do: find_details_type(cnab_file)
+
+end
+
+output:
+
+     ["A", "B"]
 ```
 
 ## Contributing
