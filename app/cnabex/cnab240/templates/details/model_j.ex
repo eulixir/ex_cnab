@@ -61,7 +61,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
        servico: service_field,
        pagamento: payment_field,
        nosso_numero: convert_position(raw_string, 203, 222),
-       codigo_modeda: convert_position(raw_string, 223, 224),
+       codigo_moeda: convert_position(raw_string, 223, 224),
        ocorrencias: convert_position(raw_string, 225, 230),
        cnab: convert_position(raw_string, 231, 240)
      }}
@@ -130,7 +130,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
         referencia_sacado: referencia_sacado
       },
       nosso_numero: nosso_numero,
-      codigo_modeda: codigo_modeda,
+      codigo_moeda: codigo_moeda,
       cnab: cnab,
       ocorrencias: ocorrencias
     } = detail
@@ -154,7 +154,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
       quantidade_da_moeda,
       referencia_sacado,
       nosso_numero,
-      codigo_modeda,
+      codigo_moeda,
       cnab,
       ocorrencias
     ]

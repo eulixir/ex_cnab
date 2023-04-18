@@ -75,7 +75,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
        service: service_context,
        uso_febraban_01: convert_position(raw_string, 17, 17),
        empresa: company,
-       informacao_1: convert_position(raw_string, 103, 142),
+       informacao: convert_position(raw_string, 103, 142),
        endereco_empresa: company_address,
        uso_febraban_02: convert_position(raw_string, 223, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
@@ -156,7 +156,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
         logradouro: logradouro,
         numero: numero_endereco
       },
-      informacao_1: informacao_01,
+      informacao: informacao_01,
       ocorrencias: ocorrencias,
       service: %{
         forma_lancamento: forma_lancamento,
