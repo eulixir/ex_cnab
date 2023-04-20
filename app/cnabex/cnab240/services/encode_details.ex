@@ -11,11 +11,9 @@ defmodule ExCnab.Cnab240.Services.EncodeDetails do
     Enum.map(details, fn detail ->
       %{header_lote: header, lotes: details, trailer_lote: footer} = detail
 
-      %{servico: %{segmento: segmento}} = hd(details)
-
       encoded_header = ChunkHeader.encode(header)
       encoded_detail = Details.encode(details)
-      encoded_footer = ChunkFooter.encode(segmento, footer)
+      encoded_footer = ChunkFooter.encode(footer)
 
       [encoded_header, encoded_detail, encoded_footer] |> Enum.join("\r\n")
     end)

@@ -32,8 +32,8 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
   └── Ocorrências (231..240)
   ```
   """
-  @spec generate(String.t(), String.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def generate("J52", raw_string) do
+  @spec generate(String.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def generate(raw_string) do
     control_field = control_fields(raw_string)
     total = total_fields(raw_string)
 
@@ -43,21 +43,6 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
        uso_febraban_1: convert_position(raw_string, 9, 17),
        total: total,
        numero_aviso_debito: convert_position(raw_string, 60, 65),
-       uso_febraban_2: convert_position(raw_string, 66, 230),
-       ocorrencias: convert_position(raw_string, 231, 240)
-     }}
-  end
-
-  def generate(_, raw_string) do
-    control_field = control_fields(raw_string)
-    total = total_fields(raw_string)
-
-    {:ok,
-     %{
-       controle: control_field,
-       uso_febraban_1: convert_position(raw_string, 9, 17),
-       total: total,
-       numero_aviso_previo: convert_position(raw_string, 60, 65),
        uso_febraban_2: convert_position(raw_string, 66, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
      }}
@@ -79,7 +64,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
     }
   end
 
-  def encode("J52", footer) do
+  def encode(footer) do
     %{
       controle: %{
         codigo_do_banco: codigo_do_banco,
@@ -106,39 +91,6 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
       valor,
       qnt_moeda,
       numero_aviso_debito,
-      uso_febraban_2,
-      ocorrencias
-    ]
-    |> Enum.join()
-  end
-
-  def encode(_type, footer) do
-    %{
-      controle: %{
-        codigo_do_banco: codigo_do_banco,
-        lote: lote,
-        registro: registro
-      },
-      uso_febraban_1: uso_febraban_1,
-      total: %{
-        qnt_registros: qnt_registros,
-        valor: valor,
-        qnt_moeda: qnt_moeda
-      },
-      numero_aviso_previo: numero_aviso_previo,
-      uso_febraban_2: uso_febraban_2,
-      ocorrencias: ocorrencias
-    } = footer
-
-    [
-      codigo_do_banco,
-      lote,
-      registro,
-      uso_febraban_1,
-      qnt_registros,
-      valor,
-      qnt_moeda,
-      numero_aviso_previo,
       uso_febraban_2,
       ocorrencias
     ]

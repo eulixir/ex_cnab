@@ -3,8 +3,6 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
   Service to generate a details
   """
 
-  import Helpers.ConvertPosition
-
   alias ExCnab.Cnab240.Templates.{ChunkFooter, ChunkHeader, Details}
 
   @payment_mapper %{
@@ -83,14 +81,9 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
 
        %{header: header, detail: details, footer: footer} = detail[detail_key_id]
 
-       detail_type =
-         details
-         |> hd()
-         |> convert_position(14, 14)
-
        {:ok, builded_header} = ChunkHeader.generate(header)
        {:ok, builded_details} = Details.generate(details)
-       {:ok, builded_footer} = ChunkFooter.generate(detail_type, footer)
+       {:ok, builded_footer} = ChunkFooter.generate(footer)
 
        amount = get_chunk_infos(builded_header, builded_footer)
 
