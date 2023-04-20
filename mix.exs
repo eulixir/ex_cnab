@@ -4,7 +4,7 @@ defmodule ExCnab.MixProject do
   def project do
     [
       app: :ex_cnab,
-      version: "1.1.0",
+      version: "1.1.1",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -32,7 +32,8 @@ defmodule ExCnab.MixProject do
 
     Supported operations:
     - Read CNAB240 file
-    - Return some data"
+    - Return some data
+    - Get details type"
   end
 
   # Specifies which paths to compile per environment.

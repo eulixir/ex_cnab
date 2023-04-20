@@ -138,4 +138,140 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelN do
       cnab: convert_position(raw_string, 210, 230)
     }
   end
+
+  def encode(detail) do
+    complementary_info =
+      encode_complementary_info(detail.informacoes_complementares.id_tributo, detail)
+
+    %{
+      controle: %{
+        banco: banco,
+        lote: lote,
+        registro: registro
+      },
+      servico: %{
+        n_registro: n_registro,
+        segmento: segmento,
+        movimento: %{
+          tipo: tipo_movimento,
+          codigo: codigo_movimento
+        }
+      },
+      pagamento: %{
+        seu_numero: seu_numero,
+        nosso_numero: nosso_numero,
+        contribuinte: contribuinte,
+        data_pagamento: data_pagamento,
+        valor_pagamento: valor_pagamento
+      },
+      ocorrencias: ocorrencias
+    } = detail
+
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      tipo_movimento,
+      codigo_movimento,
+      seu_numero,
+      nosso_numero,
+      contribuinte,
+      data_pagamento,
+      valor_pagamento,
+      complementary_info,
+      ocorrencias
+    ]
+    |> Enum.join()
+  end
+
+  defp encode_complementary_info("16", detail) do
+    %{
+      receita: receita,
+      tipo_id_contribuinte: tipo_id_contribuinte,
+      id_contribuinte: id_contribuinte,
+      id_tributo: id_tributo,
+      periodo: periodo,
+      referencia: referencia,
+      valor_principal: valor_principal,
+      valor_multa: valor_multa,
+      juros_e_encargos: juros_e_encargos,
+      data_vencimento: data_vencimento,
+      cnab: cnab
+    } = detail
+
+    [
+      receita,
+      tipo_id_contribuinte,
+      id_contribuinte,
+      id_tributo,
+      periodo,
+      referencia,
+      valor_principal,
+      valor_multa,
+      juros_e_encargos,
+      data_vencimento,
+      cnab
+    ]
+    |> Enum.join()
+  end
+
+  defp encode_complementary_info("17", detail) do
+    %{
+      receita: receita,
+      tipo_id_contribuinte: tipo_id_contribuinte,
+      id_contribuinte: id_contribuinte,
+      id_tributo: id_tributo,
+      competencia: competencia,
+      valor_tributo: valor_tributo,
+      valor_outras_entidades: valor_outras_entidades,
+      atualizacao_monetaria: atualizacao_monetaria,
+      cnab: cnab
+    } = detail
+
+    [
+      receita,
+      tipo_id_contribuinte,
+      id_contribuinte,
+      id_tributo,
+      competencia,
+      valor_tributo,
+      valor_outras_entidades,
+      atualizacao_monetaria,
+      cnab
+    ]
+    |> Enum.join()
+  end
+
+  defp encode_complementary_info("18", detail) do
+    %{
+      receita: receita,
+      tipo_id_contribuinte: tipo_id_contribuinte,
+      id_contribuinte: id_contribuinte,
+      id_tributo: id_tributo,
+      periodo: periodo,
+      receita_bruta: receita_bruta,
+      percentual: percentual,
+      valor_principal: valor_principal,
+      valor_multa: valor_multa,
+      juros_e_encargos: juros_e_encargos,
+      cnab: cnab
+    } = detail
+
+    [
+      receita,
+      tipo_id_contribuinte,
+      id_contribuinte,
+      id_tributo,
+      periodo,
+      receita_bruta,
+      percentual,
+      valor_principal,
+      valor_multa,
+      juros_e_encargos,
+      cnab
+    ]
+    |> Enum.join()
+  end
 end
