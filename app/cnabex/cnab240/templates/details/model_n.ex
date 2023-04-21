@@ -99,7 +99,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelN do
       id_tributo: convert_position(raw_string, 133, 134),
       periodo: convert_position(raw_string, 135, 142),
       referencia: convert_position(raw_string, 143, 159),
-      valor_principal: convert_position(raw_string, 158, 174),
+      valor_principal: convert_position(raw_string, 160, 174),
       valor_multa: convert_position(raw_string, 175, 189),
       juros_e_encargos: convert_position(raw_string, 190, 204),
       data_vencimento: convert_position(raw_string, 205, 212),

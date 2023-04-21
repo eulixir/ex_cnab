@@ -110,7 +110,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
       informacao_complementar_1: informacao_complementar_1,
       informacao_complementar_2: informacao_complementar_2,
       informacao_complementar_3: %{
-        identificador_tributo: indentificador_tributo,
+        identificador_tributo: identificador_tributo,
         informacao_complementar_tributo: %{
           receita: receita,
           tipo_id_contribuinte: tipo_id_contribuinte,
@@ -135,11 +135,11 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
       identifica_uso_infomacoes_1_e_2,
       informacao_complementar_1,
       informacao_complementar_2,
-      indentificador_tributo,
+      identificador,
       receita,
       tipo_id_contribuinte,
       id_contribuinte,
-      identificador,
+      identificador_tributo,
       lacre,
       digito_lacre,
       reservado_01,
