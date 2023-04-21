@@ -85,7 +85,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
   defp build_infos_field(raw_string) do
     %{
       receita: convert_position(raw_string, 179, 184),
-      tipo_id_contribuinte: convert_position(raw_string, 186),
+      tipo_id_contribuinte: convert_position(raw_string, 185, 186),
       id_contribuinte: convert_position(raw_string, 187, 200),
       identificador: convert_position(raw_string, 201, 216),
       lacre: convert_position(raw_string, 217, 225),
