@@ -23,30 +23,27 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   │   ├── CNAB (15..15)
   │   └── Cod. Mov (16..17)
   │
-  ├── Cod Reg. Opcional (18..19)
+  ├── Pagamento
+  │   ├── Código de barras (18..61)
+  │   ├── Nome do beneficiário (62..91)
+  │   ├── Data de vencimento (92..99)
+  │   ├── Valor do título (100..114)
+  │   ├── Desconto (115..129)
+  │   ├── Acréscimos (130..144)
+  │   ├── Data de pagamento (145..152)
+  │   ├── Valor do pagamento (153..167)
+  │   ├── Quantidade da moeda (168..182)
+  │   └── Referência sacado (183..202)
   │
-  ├── Dados sacador/pagador
-  │   ├── Inscrição
-  │   │   ├── Tipo (20..20)
-  │   │   └── Número (21..35)
-  │   │
-  │   └── Nome (36..75)
+  ├── Nosso número (203..222)
   │
-  ├── Dados beneficiario
-  │   ├── Inscrição
-  │   │   ├── Tipo (76..76)
-  │   │   └── Número (77..91)
-  │   │
-  │   └── Nome (92..131)
+  ├── Código da moeda (223..224)
   │
-  ├── Dados sacador avalista
-  │   ├── Inscrição
-  │   │   ├── Tipo (132..132)
-  │   │   └── Número (133..147)
-  │   │
-  │   └── Nome (148..187)
+  ├── CNAB (225..230)
   │
-  └── CNAB (188..240)
+  └── Ocorrências (231..240)
+  ```
+
   """
 
   @spec generate(String.t()) :: {:ok, Map.t()}
@@ -62,8 +59,8 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
        pagamento: payment_field,
        nosso_numero: convert_position(raw_string, 203, 222),
        codigo_moeda: convert_position(raw_string, 223, 224),
-       ocorrencias: convert_position(raw_string, 225, 230),
-       cnab: convert_position(raw_string, 231, 240)
+       cnab: convert_position(raw_string, 225, 230),
+       ocorrencias: convert_position(raw_string, 223, 240)
      }}
   end
 
