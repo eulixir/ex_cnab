@@ -149,7 +149,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
       dados_complementares: %{
         favorecido: %{
           inscricao: %{
-            tipo: tipo_inscicao,
+            tipo: tipo_inscricao,
             numero: numero_inscricao
           },
           logradouro: logradouro,
@@ -183,7 +183,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
       n_registro,
       segmento,
       cnab_01,
-      tipo_inscicao,
+      tipo_inscricao,
       numero_inscricao,
       logradouro,
       numero,
