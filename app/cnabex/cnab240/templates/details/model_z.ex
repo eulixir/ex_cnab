@@ -39,9 +39,9 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelZ do
      %{
        controle: control_field,
        servico: service_field,
-       autenticacao: convert_position(raw_string, 15),
-       controle_bancario: convert_position(raw_string, 16),
-       reservado: convert_position(raw_string, 229, 230),
+       autenticacao: convert_position(raw_string, 15, 78),
+       controle_bancario: convert_position(raw_string, 79, 103),
+       reservado: convert_position(raw_string, 104, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
      }}
   end
@@ -61,7 +61,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelZ do
     }
   end
 
-  def encode(details) do
+  def encode(detail) do
     %{
       controle: %{
         banco: banco,
@@ -76,7 +76,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelZ do
       controle_bancario: controle_bancario,
       reservado: reservado,
       ocorrencias: ocorrencias
-    } = details
+    } = detail
 
     [
       banco,
