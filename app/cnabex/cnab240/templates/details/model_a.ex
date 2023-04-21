@@ -91,7 +91,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelA do
        informacao_02: convert_position(raw_string, 178, 217),
        codigo_finalidade_doc: convert_position(raw_string, 218, 219),
        codigo_finalidade_ted: convert_position(raw_string, 220, 224),
-       codigo_finalidade_finalidade_complementar: convert_position(raw_string, 225, 226),
+       codigo_finalidade_complementar: convert_position(raw_string, 225, 226),
        cnab: convert_position(raw_string, 227, 229),
        aviso: convert_position(raw_string, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
@@ -197,7 +197,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelA do
       informacao_02: informacao_02,
       codigo_finalidade_doc: codigo_finalidade_doc,
       codigo_finalidade_ted: codigo_finalidade_ted,
-      codigo_finalidade_finalidade_complementar: codigo_finalidade_finalidade_complementar,
+      codigo_finalidade_complementar: codigo_finalidade_complementar,
       cnab: cnab,
       aviso: aviso,
       ocorrencias: ocorrencias
@@ -230,7 +230,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelA do
       informacao_02,
       codigo_finalidade_doc,
       codigo_finalidade_ted,
-      codigo_finalidade_finalidade_complementar,
+      codigo_finalidade_complementar,
       cnab,
       aviso,
       ocorrencias
