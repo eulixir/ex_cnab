@@ -40,10 +40,10 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
     {:ok,
      %{
        controle: control_field,
-       uso_febraban_1: convert_position(raw_string, 9, 17),
+       uso_febraban_01: convert_position(raw_string, 9, 17),
        total: total,
        numero_aviso_debito: convert_position(raw_string, 60, 65),
-       uso_febraban_2: convert_position(raw_string, 66, 230),
+       uso_febraban_02: convert_position(raw_string, 66, 230),
        ocorrencias: convert_position(raw_string, 231, 240)
      }}
   end
@@ -71,14 +71,14 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
         lote: lote,
         registro: registro
       },
-      uso_febraban_1: uso_febraban_1,
+      uso_febraban_01: uso_febraban_01,
       total: %{
         qnt_registros: qnt_registros,
         valor: valor,
         qnt_moeda: qnt_moeda
       },
       numero_aviso_debito: numero_aviso_debito,
-      uso_febraban_2: uso_febraban_2,
+      uso_febraban_02: uso_febraban_02,
       ocorrencias: ocorrencias
     } = footer
 
@@ -86,12 +86,12 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
       codigo_do_banco,
       lote,
       registro,
-      uso_febraban_1,
+      uso_febraban_01,
       qnt_registros,
       valor,
       qnt_moeda,
       numero_aviso_debito,
-      uso_febraban_2,
+      uso_febraban_02,
       ocorrencias
     ]
     |> Enum.join()

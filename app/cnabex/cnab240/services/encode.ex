@@ -9,7 +9,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
 
   @spec run(params :: Map.t(), attrs :: Map.t()) ::
           {:ok, %{content: String.t(), filename: String.t()}}
-  def run(%{arquivo_header: header, details: details, trailer: footer}, attrs) do
+  def run(%{header_arquivo: header, detalhes: details, trailer: footer}, attrs) do
     raw = encode_content(header, details, footer)
 
     filename =
@@ -21,7 +21,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
   end
 
   @spec run!(params :: Map.t(), attrs :: Map.t()) :: %{content: String.t(), filename: String.t()}
-  def run!(%{arquivo_header: header, detalhes: details, trailer: footer}, attrs) do
+  def run!(%{header_arquivo: header, detalhes: details, trailer: footer}, attrs) do
     raw = encode_content(header, details, footer)
 
     filename =
