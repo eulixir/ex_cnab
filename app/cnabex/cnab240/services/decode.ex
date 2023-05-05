@@ -18,7 +18,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
     "9" => :file_footer
   }
 
-  @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, Any.t()}
+  @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def run(file, attrs) do
     map =
       file
@@ -26,27 +26,24 @@ defmodule ExCnab.Cnab240.Services.Decode do
       |> String.split("\r\n")
       |> classify_by_type()
 
-    {:ok, filename_info} =
-      file
-      |> Path.basename()
-      |> GetFileInfo.run(attrs)
-
-    {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
-    {:ok, details} = BuildDetails.run(map.chunks, attrs)
-    {:ok, footer} = Footer.generate(map.file_footer, attrs)
-
-    {:ok,
-     %{
-       cnab240: %{
-         arquivo_header: file_header,
-         detalhes: details,
-         trailer: footer
-       },
-       informacoes_extras: filename_info
-     }}
+    with {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
+         {:ok, details} <- BuildDetails.run(map.chunks, attrs),
+         {:ok, footer} <- Footer.generate(map.file_footer, attrs),
+         codigo_convenio_banco <- file_header.empresa.codigo_convenio_banco,
+         {:ok, filename_info} <- GetFileInfo.run(file, codigo_convenio_banco, attrs) do
+      {:ok,
+       %{
+         cnab240: %{
+           header_arquivo: file_header,
+           detalhes: details,
+           trailer: footer
+         },
+         informacoes_extras: filename_info
+       }}
+    end
   end
 
-  @spec run!(String.t(), Map.t()) :: Map.t() | {:error, Any.t()}
+  @spec run!(String.t(), Map.t()) :: Map.t() | {:error, String.t()}
   def run!(file, attrs) do
     map =
       file
@@ -54,23 +51,19 @@ defmodule ExCnab.Cnab240.Services.Decode do
       |> String.split("\r\n")
       |> classify_by_type()
 
-    {:ok, filename_info} =
-      file
-      |> Path.basename()
-      |> GetFileInfo.run(attrs)
-
-    {:ok, file_header} = FileHeader.generate(map.file_header, attrs)
-    {:ok, details} = BuildDetails.run(map.chunks, attrs)
-    {:ok, footer} = Footer.generate(map.file_footer, attrs)
-
-    %{
-      cnab240: %{
-        arquivo_header: file_header,
-        detalhes: details,
-        trailer: footer
-      },
-      informacoes_extras: filename_info
-    }
+    with {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
+         {:ok, details} <- BuildDetails.run(map.chunks, attrs),
+         {:ok, footer} <- Footer.generate(map.file_footer, attrs),
+         {:ok, filename_info} <- GetFileInfo.run(file, attrs) do
+      %{
+        cnab240: %{
+          header_arquivo: file_header,
+          detalhes: details,
+          trailer: footer
+        },
+        informacoes_extras: filename_info
+      }
+    end
   end
 
   defp classify_by_type(array) do

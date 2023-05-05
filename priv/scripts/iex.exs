@@ -1,13 +1,13 @@
 import ExCnab240
 
   {:ok, decoded1} =
-    "../documents/JVH05041742.RET"
+    "../documents/JVH06102.rem"
     |> decode(%{})
 
   decoded1.cnab240
   |> encode!(%{})
 
-  "../documents/banana.txt"
+  {:error, _failed_encoded}= "../documents/banana.txt"
   |> decode(%{})
 
   decoded1
