@@ -5,7 +5,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
   alias ExCnab.Cnab240.Services.BuildDetails
   alias ExCnab.Cnab240.Templates.FileHeader
-  alias ExCnab.Cnab240.Templates.Footer
+  alias ExCnab.Cnab240.Templates.FileFooter
 
   alias ExCnab.Cnab240.Services.GetFileInfo
 
@@ -23,7 +23,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
     with {:ok, map} <- read_file(file),
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
-         {:ok, footer} <- Footer.generate(map.file_footer, attrs),
+         {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
          {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
       build_response(file_header, details, footer, filename_info, :ok)
     end
@@ -34,7 +34,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
     with {:ok, map} <- read_file(file),
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
-         {:ok, footer} <- Footer.generate(map.file_footer, attrs),
+         {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
          {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
       build_response(file_header, details, footer, filename_info, :no)
     end

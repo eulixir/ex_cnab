@@ -4,7 +4,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
   """
 
   alias ExCnab.Cnab240.Services.EncodeDetails
-  alias ExCnab.Cnab240.Templates.Footer
+  alias ExCnab.Cnab240.Templates.FileFooter
   alias ExCnab.Cnab240.Templates.FileHeader
 
   @spec run(params :: Map.t(), attrs :: Map.t()) ::
@@ -35,7 +35,7 @@ defmodule ExCnab.Cnab240.Services.Encode do
   defp encode_content(header, details, footer) do
     encoded_header = FileHeader.encode(header)
     encoded_details = EncodeDetails.run(details)
-    encoded_footer = Footer.encode(footer)
+    encoded_footer = FileFooter.encode(footer)
 
     [encoded_header, encoded_details, encoded_footer, ""] |> Enum.join("\r\n")
   end

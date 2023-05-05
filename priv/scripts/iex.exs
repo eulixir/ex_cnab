@@ -7,8 +7,9 @@ import ExCnab240
   decoded1.cnab240
   |> encode!(%{})
 
-  {:error, _failed_encoded}= "../documents/banana.txt"
-  |> decode(%{})
+  {:error, _failed_encoded} =
+    "../documents/banana.txt"
+    |> decode(%{})
 
   decoded1
   |> find_details_type()
