@@ -10,10 +10,11 @@ defmodule ExCnab.Cnab240.Validator.FileHeader do
     end
   end
 
+  @spec_length 240
   defp validate_length(raw_header) do
     case String.length(raw_header) do
-      240 -> :ok
-      number -> {:error, "Invalid file header length: #{number}"}
+      @spec_length -> :ok
+      number -> {:error, "Invalid file header length: #{number}, expected #{@spec_length}}"}
     end
   end
 end

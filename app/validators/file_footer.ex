@@ -48,7 +48,8 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
 
       false ->
         {:error,
-         "The amount of records in this file is higher than the limit proposed by FEBRABAN #{@batch_limit}, the amount of records for this cnab is #{qnt_registros}"}
+         "The amount of records in this file is higher than the limit proposed by FEBRABAN #{@batch_limit},
+         the amount of records for this cnab is #{qnt_registros}"}
     end
   end
 end
