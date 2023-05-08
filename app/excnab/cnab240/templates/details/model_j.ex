@@ -45,25 +45,31 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   ```
   """
 
-  alias ExCnab.Cnab240.Validator.Details.ModelJ, as: ModelAValidator
+  alias ExCnab.Cnab240.Validator.Details.ModelJ, as: ModelJValidator
+  alias ExCnab.Cnab240.Templates.Details.ModelJ52, as: ModelJ52
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
-    IO.inspect(raw_string)
-    control_field = control_field(raw_string)
-    service_field = service_field(raw_string)
-    payment_field = payment_field(raw_string)
+    case convert_position(raw_string, 18, 19) do
+      "52" ->
+        ModelJ52.generate(raw_string)
 
-    %{
-      controle: control_field,
-      servico: service_field,
-      pagamento: payment_field,
-      nosso_numero: convert_position(raw_string, 203, 222),
-      codigo_moeda: convert_position(raw_string, 223, 224),
-      cnab: convert_position(raw_string, 225, 230),
-      ocorrencias: convert_position(raw_string, 223, 240)
-    }
-    |> ModelAValidator.call(raw_string)
+      _ ->
+        control_field = control_field(raw_string)
+        service_field = service_field(raw_string)
+        payment_field = payment_field(raw_string)
+
+        %{
+          controle: control_field,
+          servico: service_field,
+          pagamento: payment_field,
+          nosso_numero: convert_position(raw_string, 203, 222),
+          codigo_moeda: convert_position(raw_string, 223, 224),
+          cnab: convert_position(raw_string, 225, 230),
+          ocorrencias: convert_position(raw_string, 223, 240)
+        }
+        |> ModelJValidator.call(raw_string)
+    end
   end
 
   defp control_field(raw_string) do

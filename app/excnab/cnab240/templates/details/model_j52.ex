@@ -48,7 +48,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
   │
   └── CNAB (188..240)
   """
-  alias ExCnab.Cnab240.Validator.Details.ModelJ52, as: ModelAValidator
+  alias ExCnab.Cnab240.Validator.Details.ModelJ52, as: ModelJ52Validator
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
@@ -67,7 +67,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
       cod_reg: convert_position(raw_string, 18, 19),
       cnab: convert_position(raw_string, 188, 240)
     }
-    |> ModelAValidator.call(raw_string)
+    |> ModelJ52Validator.call(raw_string)
   end
 
   defp control_field(raw_string) do

@@ -39,7 +39,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelN do
   │
   └── Ocorrências (231..240)
   """
-  alias ExCnab.Cnab240.Validator.Details.ModelN, as: ModelAValidator
+  alias ExCnab.Cnab240.Validator.Details.ModelN, as: ModelNValidator
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
@@ -59,7 +59,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelN do
       informacoes_complementares: complementary_info,
       ocorrencias: convert_position(raw_string, 231, 240)
     }
-    |> ModelAValidator.call(raw_string)
+    |> ModelNValidator.call(raw_string)
   end
 
   defp control_field(raw_string) do

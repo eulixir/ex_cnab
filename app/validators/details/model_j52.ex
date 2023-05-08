@@ -34,7 +34,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ52 do
     end
   end
 
-  @model_type ""
+  @model_type "J"
   defp validate_model_type(model_type) do
     case model_type == @model_type do
       true ->
