@@ -107,6 +107,8 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   end
 
   @spec encode(detail :: Map.t()) :: String.t()
+  def encode(%{cod_reg: "52"} = detail), do: ModelJ52.encode(detail)
+
   def encode(detail) do
     %{
       controle: %{
