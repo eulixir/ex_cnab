@@ -7,7 +7,8 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
   def call(builded_footer, raw_footer) do
     with :ok <- validate_length(raw_footer),
          :ok <- validate_chunk_size(builded_footer.total.qnt_lotes),
-         :ok <- validate_records_size(builded_footer.total.qnt_registros) do
+         :ok <- validate_records_size(builded_footer.total.qnt_registros),
+         :ok <- validate_record_type(builded_footer.controle.registro) do
       {:ok, builded_footer}
     end
   end
@@ -50,6 +51,17 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
         {:error,
          "The amount of records in this file is higher than the limit proposed by FEBRABAN #{@batch_limit},
          the amount of records for this cnab is #{qnt_registros}"}
+    end
+  end
+
+  @record_type "9"
+  defp validate_record_type(record_type) do
+    case record_type == @record_type do
+      true ->
+        :ok
+
+      false ->
+        {:error, "Invalid record type: #{record_type}, and should be #{@record_type}"}
     end
   end
 end

@@ -62,6 +62,8 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
   └── Ocorrências (231..240)
   """
 
+  alias ExCnab.Cnab240.Validator.Details.ChunkHeader, as: ChunkHeaderValidator
+
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
     control_context = control_fields(raw_string)
@@ -69,17 +71,17 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
     company = company_fields(raw_string)
     company_address = company_address_fields(raw_string)
 
-    {:ok,
-     %{
-       controle: control_context,
-       service: service_context,
-       uso_febraban_01: convert_position(raw_string, 17, 17),
-       empresa: company,
-       informacao: convert_position(raw_string, 103, 142),
-       endereco_empresa: company_address,
-       uso_febraban_02: convert_position(raw_string, 223, 230),
-       ocorrencias: convert_position(raw_string, 231, 240)
-     }}
+    %{
+      controle: control_context,
+      servico: service_context,
+      uso_febraban_01: convert_position(raw_string, 17, 17),
+      empresa: company,
+      informacao: convert_position(raw_string, 103, 142),
+      endereco_empresa: company_address,
+      uso_febraban_02: convert_position(raw_string, 223, 230),
+      ocorrencias: convert_position(raw_string, 231, 240)
+    }
+    |> ChunkHeaderValidator.call(raw_string)
   end
 
   defp control_fields(raw_string) do
@@ -158,7 +160,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkHeader do
       },
       informacao: informacao_01,
       ocorrencias: ocorrencias,
-      service: %{
+      servico: %{
         forma_lancamento: forma_lancamento,
         layout_lote: layout_lote,
         operacao: operacao,

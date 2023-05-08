@@ -82,8 +82,6 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
     end
   end
 
-  defp build_recursive(_, _, _, {:error, error}), do: {:error, error}
-
   defp build_recursive([], acc, _, nil), do: {:ok, acc}
 
   defp build_recursive(batches, acc, original_batches, nil) do
@@ -110,9 +108,6 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
           ]
 
       build_recursive(tail, acc, original_batches, nil)
-    else
-      {:error, error} ->
-        build_recursive(tail, acc, hd, {:error, error})
     end
   end
 
@@ -122,7 +117,7 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
     %{tipo: service_type, quantidade: amount}
   end
 
-  defp get_payment_method(%{service: payment_details}) do
+  defp get_payment_method(%{servico: payment_details}) do
     payment_input = @payment_mapper[:"#{payment_details.tipo_servico}"]
 
     service_type = payment_input[:"#{payment_details.forma_lancamento}"]
