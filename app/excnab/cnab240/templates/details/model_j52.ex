@@ -48,6 +48,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
   │
   └── CNAB (188..240)
   """
+  alias ExCnab.Cnab240.Validator.Details.ModelJ52, as: ModelAValidator
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
@@ -57,16 +58,16 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
     beneficiary_field = beneficiary_field(raw_string)
     drawer_voucher_field = drawer_voucher_field(raw_string)
 
-    {:ok,
-     %{
-       controle: control_field,
-       servico: service_field,
-       dados_sacador: drawer_field,
-       dados_beneficiario: beneficiary_field,
-       dados_sacador_avalista: drawer_voucher_field,
-       cod_reg: convert_position(raw_string, 18, 19),
-       cnab: convert_position(raw_string, 188, 240)
-     }}
+    %{
+      controle: control_field,
+      servico: service_field,
+      dados_sacador: drawer_field,
+      dados_beneficiario: beneficiary_field,
+      dados_sacador_avalista: drawer_voucher_field,
+      cod_reg: convert_position(raw_string, 18, 19),
+      cnab: convert_position(raw_string, 188, 240)
+    }
+    |> ModelAValidator.call(raw_string)
   end
 
   defp control_field(raw_string) do

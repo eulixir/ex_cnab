@@ -84,30 +84,24 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
 
   defp build_recursive([], acc, _, nil), do: {:ok, acc}
 
-  defp build_recursive(batches, acc, original_batches, nil) do
-    [hd | tail] = batches
-
-    index = Enum.find_index(original_batches, &(&1 == hd)) + 1
-    detail_key_id = :"chunk_register_#{index}"
-
-    %{header: header, detail: details, footer: footer} = hd[detail_key_id]
-
-    with {:ok, builded_header} <- ChunkHeader.generate(header),
+  defp build_recursive([hd | tail], acc, original_batches, nil) do
+    with index <- Enum.find_index(original_batches, &(&1 == hd)) + 1,
+         detail_key_id <- :"chunk_register_#{index}",
+         %{header: header, detail: details, footer: footer} <- hd[detail_key_id],
+         {:ok, builded_header} <- ChunkHeader.generate(header),
          {:ok, builded_details} <- Details.generate(details),
          {:ok, builded_footer} <- ChunkFooter.generate(footer),
          amount <- get_chunk_infos(builded_header, builded_footer) do
-      acc =
-        acc ++
-          [
-            %{
-              header_lote: builded_header,
-              lotes: builded_details,
-              trailer_lote: builded_footer,
-              valor: amount
-            }
-          ]
+      details = [
+        %{
+          header_lote: builded_header,
+          lotes: builded_details,
+          trailer_lote: builded_footer,
+          valor: amount
+        }
+      ]
 
-      build_recursive(tail, acc, original_batches, nil)
+      build_recursive(tail, acc ++ details, original_batches, nil)
     end
   end
 

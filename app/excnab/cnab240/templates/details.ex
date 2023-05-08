@@ -4,29 +4,32 @@ defmodule ExCnab.Cnab240.Templates.Details do
   """
   import Helpers.ConvertPosition
 
+  alias ExCnab.Cnab240.Validator.Details.Chunk, as: ChunkValidator
+
   @spec generate(List.t()) :: {:ok, List.t(Map.t())}
-  def generate(details) do
-    formated_details =
-      Enum.map(details, fn register_detail ->
-        {:ok, detail_object} =
-          register_detail
-          |> convert_position(14)
-          |> payment_template(:generate, register_detail)
-
-        detail_object
-      end)
-
-    {:ok, formated_details}
+  def generate(raw_details) do
+    raw_details
+    |> build_recursive([])
+    |> case do
+      {:error, error} -> {:error, error}
+      details -> ChunkValidator.call(details, raw_details)
+    end
   end
 
   @spec encode(List.t()) :: List.t(Map.t())
   def encode(details) do
-    Enum.map(details, fn detail ->
-      detail.servico.segmento
-
-      payment_template(detail.servico.segmento, :encode, detail)
-    end)
+    details
+    |> Enum.map(&payment_template(&1.servico.segmento, :encode, &1))
     |> Enum.join("\r\n")
+  end
+
+  defp build_recursive([], acc), do: acc
+
+  defp build_recursive([register_detail | tail], acc) do
+    with type <- convert_position(register_detail, 14),
+         {:ok, detail_object} <- payment_template(type, :generate, register_detail) do
+      build_recursive(tail, acc ++ [detail_object])
+    end
   end
 
   defp payment_template(type, function, regsiter_detail) do
