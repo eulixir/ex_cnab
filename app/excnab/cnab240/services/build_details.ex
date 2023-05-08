@@ -5,6 +5,8 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
 
   alias ExCnab.Cnab240.Templates.{ChunkFooter, ChunkHeader, Details}
 
+  alias ExCnab.Cnab240.Validator.Details, as: DetailsValidator
+
   @payment_mapper %{
     "03": %{
       code: :boleto_eletronico,
@@ -73,27 +75,45 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
   }
 
   @spec run(Map.t(), Map.t()) :: {:ok, Map.t()}
-  def run(%{chunks: chunks}, _attrs) do
-    {:ok,
-     Enum.map(chunks, fn detail ->
-       index = Enum.find_index(chunks, &(&1 == detail)) + 1
-       detail_key_id = :"chunk_register_#{index}"
+  def run(%{chunks: batches}, _attrs) do
+    with {:ok, builded_details} <- build_recursive(batches, [], batches, nil),
+         {:ok, _} <- DetailsValidator.call(builded_details, batches) do
+      {:ok, builded_details}
+    end
+  end
 
-       %{header: header, detail: details, footer: footer} = detail[detail_key_id]
+  defp build_recursive(_, _, _, {:error, error}), do: {:error, error}
 
-       {:ok, builded_header} = ChunkHeader.generate(header)
-       {:ok, builded_details} = Details.generate(details)
-       {:ok, builded_footer} = ChunkFooter.generate(footer)
+  defp build_recursive([], acc, _, nil), do: {:ok, acc}
 
-       amount = get_chunk_infos(builded_header, builded_footer)
+  defp build_recursive(batches, acc, original_batches, nil) do
+    [hd | tail] = batches
 
-       %{
-         header_lote: builded_header,
-         lotes: builded_details,
-         trailer_lote: builded_footer,
-         valor: amount
-       }
-     end)}
+    index = Enum.find_index(original_batches, &(&1 == hd)) + 1
+    detail_key_id = :"chunk_register_#{index}"
+
+    %{header: header, detail: details, footer: footer} = hd[detail_key_id]
+
+    with {:ok, builded_header} <- ChunkHeader.generate(header),
+         {:ok, builded_details} <- Details.generate(details),
+         {:ok, builded_footer} <- ChunkFooter.generate(footer),
+         amount <- get_chunk_infos(builded_header, builded_footer) do
+      acc =
+        acc ++
+          [
+            %{
+              header_lote: builded_header,
+              lotes: builded_details,
+              trailer_lote: builded_footer,
+              valor: amount
+            }
+          ]
+
+      build_recursive(tail, acc, original_batches, nil)
+    else
+      {:error, error} ->
+        build_recursive(tail, acc, hd, {:error, error})
+    end
   end
 
   defp get_chunk_infos(header, %{total: %{valor: amount}}) do
