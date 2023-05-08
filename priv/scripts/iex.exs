@@ -1,7 +1,7 @@
 import ExCnab240
 
   {:ok, decoded1} =
-    "../documents/JVH06102.rem"
+    "../documents/JVH06103.rem"
     |> decode(%{})
 
   decoded1.cnab240

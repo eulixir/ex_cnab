@@ -5,8 +5,6 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelB do
 
   @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def call(builded_detail, raw_detail) do
-    IO.inspect(builded_detail)
-
     with :ok <- validate_length(raw_detail),
          :ok <- validate_record_type(builded_detail.controle.registro),
          :ok <- validate_model_type(builded_detail.servico.segmento) do

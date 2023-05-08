@@ -49,6 +49,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
+    IO.inspect(raw_string)
     control_field = control_field(raw_string)
     service_field = service_field(raw_string)
     payment_field = payment_field(raw_string)

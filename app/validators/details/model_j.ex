@@ -7,8 +7,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ do
   def call(builded_detail, raw_detail) do
     with :ok <- validate_length(raw_detail),
          :ok <- validate_record_type(builded_detail.controle.registro),
-         :ok <- validate_model_type(builded_detail.servico.segmento),
-         :ok <- validate_currency_type(builded_detail.credito.moeda.tipo) do
+         :ok <- validate_model_type(builded_detail.servico.segmento) do
       {:ok, builded_detail}
     end
   end
@@ -43,17 +42,6 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ do
 
       false ->
         {:error, "Invalid record type: #{model_type}, and should be #{@model_type}}"}
-    end
-  end
-
-  @currency_type "BRL"
-  defp validate_currency_type(currency_type) do
-    case currency_type == @currency_type do
-      true ->
-        :ok
-
-      false ->
-        {:error, "Invalid currency type: #{currency_type}, and should be #{@currency_type}}"}
     end
   end
 end

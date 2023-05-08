@@ -45,4 +45,13 @@ defmodule ExCnab.Cnab240.Validator.Filename do
       false -> {:error, "Invalid day"}
     end
   end
+
+  defp validate_date(attrs) when attrs.formato_arquivo in [".rem", ".REM"] do
+    case attrs.dia_geracao_arquivo in @possible_days do
+      true -> :ok
+      false -> {:error, "Invalid day"}
+    end
+  end
+
+  defp validate_date(_attrs), do: :ok
 end
