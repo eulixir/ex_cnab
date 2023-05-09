@@ -61,24 +61,26 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
   ```
   """
 
+  alias ExCnab.Cnab240.Validator.FileHeader, as: FileHeaderValidator
+
   @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def generate(raw_string, _attrs) do
     control_fields = control_fields(raw_string)
     company_fields = company_fields(raw_string)
     about_fields = about_fields(raw_string)
 
-    {:ok,
-     %{
-       controle: control_fields,
-       uso_febraban_01: convert_position(raw_string, 9, 17),
-       empresa: company_fields,
-       nome_banco: convert_position(raw_string, 103, 132),
-       uso_febraban_02: convert_position(raw_string, 133, 142),
-       arquivo: about_fields,
-       uso_banco: convert_position(raw_string, 172, 191),
-       uso_empresa: convert_position(raw_string, 192, 211),
-       uso_febraban_03: convert_position(raw_string, 212, 240)
-     }}
+    %{
+      controle: control_fields,
+      uso_febraban_01: convert_position(raw_string, 9, 17),
+      empresa: company_fields,
+      nome_banco: convert_position(raw_string, 103, 132),
+      uso_febraban_02: convert_position(raw_string, 133, 142),
+      arquivo: about_fields,
+      uso_banco: convert_position(raw_string, 172, 191),
+      uso_empresa: convert_position(raw_string, 192, 211),
+      uso_febraban_03: convert_position(raw_string, 212, 240)
+    }
+    |> FileHeaderValidator.call(raw_string)
   end
 
   defp control_fields(raw_string) do

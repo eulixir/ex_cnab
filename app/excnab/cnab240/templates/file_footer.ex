@@ -1,4 +1,4 @@
-defmodule ExCnab.Cnab240.Templates.Footer do
+defmodule ExCnab.Cnab240.Templates.FileFooter do
   @moduledoc """
   Template for rendering a cnab240 footer from a file
   """
@@ -29,18 +29,20 @@ defmodule ExCnab.Cnab240.Templates.Footer do
   ```
   """
 
+  alias ExCnab.Cnab240.Validator.FileFooter, as: FileFooterValidator
+
   @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def generate(raw_string, _attrs) do
     info = info_fields(raw_string)
     total = total_fields(raw_string)
 
-    {:ok,
-     %{
-       controle: info,
-       uso_febraban_01: convert_position(raw_string, 9, 17),
-       total: total,
-       uso_febraban_02: convert_position(raw_string, 36, 240)
-     }}
+    %{
+      controle: info,
+      uso_febraban_01: convert_position(raw_string, 9, 17),
+      total: total,
+      uso_febraban_02: convert_position(raw_string, 36, 240)
+    }
+    |> FileFooterValidator.call(raw_string)
   end
 
   defp info_fields(raw_string) do

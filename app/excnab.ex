@@ -61,11 +61,17 @@ defmodule ExCnab240 do
         }
       }}
   """
-  @callback decode(filepath :: String.t()) :: any
-  @callback decode(filepath :: String.t(), attrs :: keyword | map) :: any
+  @callback decode(filepath :: String.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  @callback decode(filepath :: String.t(), attrs :: keyword | map) ::
+              {:ok, Map.t()} | {:error, String.t()}
+
   def decode(filepath, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Decode.run(filepath, attrs)
   end
+
+  @callback decode!(filepath :: String.t()) :: Map.t() | {:error, String.t()}
+  @callback decode!(filepath :: String.t(), attrs :: keyword | map) ::
+              Map.t() | {:error, String.t()}
 
   def decode!(filepath, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Decode.run!(filepath, attrs)
@@ -89,15 +95,16 @@ defmodule ExCnab240 do
       encode!(%{cnab: cnab}, %{})
       %{contnet: "xxx...", filename: "default.ret"}
   """
-  @callback encode(params :: Map.t()) :: any
+  @callback encode(params :: Map.t()) ::
+              {:ok, %{filename: String.t(), content: String.t()}} | {:error, String.t()}
   @callback encode(params :: Map.t(), attrs :: keyword | map) ::
-              {:ok, %{filename: String.t(), content: String.t()}}
+              {:ok, %{filename: String.t(), content: String.t()}} | {:error, String.t()}
   def encode(params, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Encode.run(params, attrs)
   end
 
-  @callback encode(params :: Map.t()) :: any
-  @callback encode(params :: Map.t(), attrs :: keyword | map) ::
+  @callback encode!(params :: Map.t()) :: %{filename: String.t(), content: String.t()}
+  @callback encode!(params :: Map.t(), attrs :: keyword | map) ::
               %{filename: String.t(), content: String.t()}
   def encode!(params, attrs \\ %{}) do
     ExCnab.Cnab240.Services.Encode.run!(params, attrs)

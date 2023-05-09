@@ -43,25 +43,33 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   │
   └── Ocorrências (231..240)
   ```
-
   """
+
+  alias ExCnab.Cnab240.Validator.Details.ModelJ, as: ModelJValidator
+  alias ExCnab.Cnab240.Templates.Details.ModelJ52, as: ModelJ52
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
-    control_field = control_field(raw_string)
-    service_field = service_field(raw_string)
-    payment_field = payment_field(raw_string)
+    case convert_position(raw_string, 18, 19) do
+      "52" ->
+        ModelJ52.generate(raw_string)
 
-    {:ok,
-     %{
-       controle: control_field,
-       servico: service_field,
-       pagamento: payment_field,
-       nosso_numero: convert_position(raw_string, 203, 222),
-       codigo_moeda: convert_position(raw_string, 223, 224),
-       cnab: convert_position(raw_string, 225, 230),
-       ocorrencias: convert_position(raw_string, 223, 240)
-     }}
+      _ ->
+        control_field = control_field(raw_string)
+        service_field = service_field(raw_string)
+        payment_field = payment_field(raw_string)
+
+        %{
+          controle: control_field,
+          servico: service_field,
+          pagamento: payment_field,
+          nosso_numero: convert_position(raw_string, 203, 222),
+          codigo_moeda: convert_position(raw_string, 223, 224),
+          cnab: convert_position(raw_string, 225, 230),
+          ocorrencias: convert_position(raw_string, 223, 240)
+        }
+        |> ModelJValidator.call(raw_string)
+    end
   end
 
   defp control_field(raw_string) do
@@ -99,6 +107,8 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
   end
 
   @spec encode(detail :: Map.t()) :: String.t()
+  def encode(%{cod_reg: "52"} = detail), do: ModelJ52.encode(detail)
+
   def encode(detail) do
     %{
       controle: %{

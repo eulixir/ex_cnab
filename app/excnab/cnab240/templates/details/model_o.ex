@@ -44,20 +44,22 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelO do
   └── Ocorrências (231..240)
   """
 
+  alias ExCnab.Cnab240.Validator.Details.ModelO, as: ModelOValidator
+
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
     control_field = control_field(raw_string)
     service_field = service_field(raw_string)
     payment_field = payment_field(raw_string)
 
-    {:ok,
-     %{
-       controle: control_field,
-       servico: service_field,
-       pagamento: payment_field,
-       cnab: convert_position(raw_string, 163, 230),
-       ocorrencias: convert_position(raw_string, 231, 240)
-     }}
+    %{
+      controle: control_field,
+      servico: service_field,
+      pagamento: payment_field,
+      cnab: convert_position(raw_string, 163, 230),
+      ocorrencias: convert_position(raw_string, 231, 240)
+    }
+    |> ModelOValidator.call(raw_string)
   end
 
   defp control_field(raw_string) do

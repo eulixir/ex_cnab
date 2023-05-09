@@ -1,14 +1,15 @@
 import ExCnab240
 
   {:ok, decoded1} =
-    "../documents/JVH05041742.RET"
+    "../documents/JVH06103.rem"
     |> decode(%{})
 
   decoded1.cnab240
   |> encode!(%{})
 
-  "../documents/banana.txt"
-  |> decode(%{})
+  {:error, _failed_encoded} =
+    "../documents/banana.txt"
+    |> decode(%{})
 
   decoded1
   |> find_details_type()

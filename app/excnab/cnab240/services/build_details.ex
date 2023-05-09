@@ -5,6 +5,8 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
 
   alias ExCnab.Cnab240.Templates.{ChunkFooter, ChunkHeader, Details}
 
+  alias ExCnab.Cnab240.Validator.Details, as: DetailsValidator
+
   @payment_mapper %{
     "03": %{
       code: :boleto_eletronico,
@@ -73,27 +75,34 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
   }
 
   @spec run(Map.t(), Map.t()) :: {:ok, Map.t()}
-  def run(%{chunks: chunks}, _attrs) do
-    {:ok,
-     Enum.map(chunks, fn detail ->
-       index = Enum.find_index(chunks, &(&1 == detail)) + 1
-       detail_key_id = :"chunk_register_#{index}"
+  def run(%{chunks: batches}, _attrs) do
+    with {:ok, builded_details} <- build_recursive(batches, [], batches, nil),
+         {:ok, _} <- DetailsValidator.call(builded_details, batches) do
+      {:ok, builded_details}
+    end
+  end
 
-       %{header: header, detail: details, footer: footer} = detail[detail_key_id]
+  defp build_recursive([], acc, _, nil), do: {:ok, acc}
 
-       {:ok, builded_header} = ChunkHeader.generate(header)
-       {:ok, builded_details} = Details.generate(details)
-       {:ok, builded_footer} = ChunkFooter.generate(footer)
+  defp build_recursive([hd | tail], acc, original_batches, nil) do
+    with index <- Enum.find_index(original_batches, &(&1 == hd)) + 1,
+         detail_key_id <- :"chunk_register_#{index}",
+         %{header: header, detail: details, footer: footer} <- hd[detail_key_id],
+         {:ok, builded_header} <- ChunkHeader.generate(header),
+         {:ok, builded_details} <- Details.generate(details),
+         {:ok, builded_footer} <- ChunkFooter.generate(footer),
+         amount <- get_chunk_infos(builded_header, builded_footer) do
+      details = [
+        %{
+          header_lote: builded_header,
+          lotes: builded_details,
+          trailer_lote: builded_footer,
+          valor: amount
+        }
+      ]
 
-       amount = get_chunk_infos(builded_header, builded_footer)
-
-       %{
-         header_lote: builded_header,
-         lotes: builded_details,
-         trailer_lote: builded_footer,
-         valor: amount
-       }
-     end)}
+      build_recursive(tail, acc ++ details, original_batches, nil)
+    end
   end
 
   defp get_chunk_infos(header, %{total: %{valor: amount}}) do
@@ -102,7 +111,7 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
     %{tipo: service_type, quantidade: amount}
   end
 
-  defp get_payment_method(%{service: payment_details}) do
+  defp get_payment_method(%{servico: payment_details}) do
     payment_input = @payment_mapper[:"#{payment_details.tipo_servico}"]
 
     service_type = payment_input[:"#{payment_details.forma_lancamento}"]

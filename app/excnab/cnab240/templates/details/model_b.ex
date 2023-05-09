@@ -67,6 +67,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
   │
   └── Identificação do banco no SPB (233..240)
   """
+  alias ExCnab.Cnab240.Validator.Details.ModelB, as: ModelBValidator
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
@@ -75,20 +76,20 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
     beneficiary_fields = beneficiary_fields(raw_string)
     payer_fields = payer_fields(raw_string)
 
-    {:ok,
-     %{
-       controle: control_fields,
-       servico: service_fields,
-       cnab: convert_position(raw_string, 15, 17),
-       dados_complementares: %{
-         favorecido: beneficiary_fields,
-         pagto: payer_fields,
-         cod_favorecido: convert_position(raw_string, 211, 225)
-       },
-       aviso: convert_position(raw_string, 226, 226),
-       codigo_ug_centralizadora: convert_position(raw_string, 227, 232),
-       id_banco_spb: convert_position(raw_string, 233, 240)
-     }}
+    %{
+      controle: control_fields,
+      servico: service_fields,
+      cnab: convert_position(raw_string, 15, 17),
+      dados_complementares: %{
+        favorecido: beneficiary_fields,
+        pagto: payer_fields,
+        cod_favorecido: convert_position(raw_string, 211, 225)
+      },
+      aviso: convert_position(raw_string, 226, 226),
+      codigo_ug_centralizadora: convert_position(raw_string, 227, 232),
+      id_banco_spb: convert_position(raw_string, 233, 240)
+    }
+    |> ModelBValidator.call(raw_string)
   end
 
   defp control_fields(raw_string) do

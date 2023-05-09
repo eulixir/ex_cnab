@@ -44,27 +44,29 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelW do
   └── Ocorrências (231..240)
   """
 
+  alias ExCnab.Cnab240.Validator.Details.ModelW, as: ModelWValidator
+
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
     control_field = control_field(raw_string)
     service_field = service_field(raw_string)
     info_field = build_infos_field(raw_string)
 
-    {:ok,
-     %{
-       controle: control_field,
-       servico: service_field,
-       complemento_registro: convert_position(raw_string, 15),
-       identifica_uso_infomacoes_1_e_2: convert_position(raw_string, 16),
-       informacao_complementar_1: convert_position(raw_string, 17, 96),
-       informacao_complementar_2: convert_position(raw_string, 87, 176),
-       informacao_complementar_3: %{
-         identificador_tributo: convert_position(raw_string, 177, 178),
-         informacao_complementar_tributo: info_field
-       },
-       reservado: convert_position(raw_string, 229, 230),
-       ocorrencias: convert_position(raw_string, 231, 240)
-     }}
+    %{
+      controle: control_field,
+      servico: service_field,
+      complemento_registro: convert_position(raw_string, 15),
+      identifica_uso_infomacoes_1_e_2: convert_position(raw_string, 16),
+      informacao_complementar_1: convert_position(raw_string, 17, 96),
+      informacao_complementar_2: convert_position(raw_string, 87, 176),
+      informacao_complementar_3: %{
+        identificador_tributo: convert_position(raw_string, 177, 178),
+        informacao_complementar_tributo: info_field
+      },
+      reservado: convert_position(raw_string, 229, 230),
+      ocorrencias: convert_position(raw_string, 231, 240)
+    }
+    |> ModelWValidator.call(raw_string)
   end
 
   defp control_field(raw_string) do
