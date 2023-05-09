@@ -12,8 +12,12 @@ defmodule ExCnab.Cnab240.Services.FindDetailsTypes do
   defp get_type(details) do
     details
     |> Enum.map(& &1.lotes)
-    |> Enum.map(fn x -> Enum.map(x, & &1.servico.segmento) end)
+    |> Enum.map(fn x -> Enum.map(x, &has_j52?(&1)) end)
     |> Enum.flat_map(& &1)
     |> Enum.uniq()
   end
+
+  defp has_j52?(%{cod_reg: "52"}), do: "J52"
+
+  defp has_j52?(model), do: model.servico.segmento
 end
