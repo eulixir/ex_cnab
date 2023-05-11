@@ -66,7 +66,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ do
           nosso_numero: convert_position(raw_string, 203, 222),
           codigo_moeda: convert_position(raw_string, 223, 224),
           cnab: convert_position(raw_string, 225, 230),
-          ocorrencias: convert_position(raw_string, 223, 240)
+          ocorrencias: convert_position(raw_string, 231, 240)
         }
         |> ModelJValidator.call(raw_string)
     end

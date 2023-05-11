@@ -32,7 +32,10 @@ defmodule ExCnab.Cnab240.Templates.Details do
     end
   end
 
-  defp payment_template(type, function, regsiter_detail) do
+  @types ~w(A B J N O W Z)s
+  defp payment_template(type, function, regsiter_detail) when type in @types do
     apply(:"Elixir.ExCnab.Cnab240.Templates.Details.Model#{type}", function, [regsiter_detail])
   end
+
+  defp payment_template(type, _function, _regsiter_detail), do: {:error, "Invalid type: #{type}"}
 end
