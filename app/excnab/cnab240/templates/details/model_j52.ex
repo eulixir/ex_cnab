@@ -97,7 +97,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
     }
   end
 
-  defp drawer_voucher_field(raw_string) do
+  defp beneficiary_field(raw_string) do
     %{
       inscricao: %{
         tipo: convert_position(raw_string, 76),
@@ -107,7 +107,7 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelJ52 do
     }
   end
 
-  defp beneficiary_field(raw_string) do
+  defp drawer_voucher_field(raw_string) do
     %{
       inscricao: %{
         tipo: convert_position(raw_string, 132),
