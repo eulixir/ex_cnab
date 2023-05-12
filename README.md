@@ -14,7 +14,7 @@ In `mix.exs`, add the ExMachina dependency:
 ```elixir
 def deps do
   [
-    {:ex_cnab, "~> 1.2.3"},
+    {:ex_cnab, "~> 1.2.4"},
   ]
 end
 ```
