@@ -66,11 +66,43 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
   ├── Código UG Centralizadora (227..232)
   │
   └── Identificação do banco no SPB (233..240)
+
+  Para Pix
+
+  CNAB
+  ├── Controle
+  │   ├── Banco (1..3)
+  │   ├── Lote (4..7)
+  │   └── Registro (8..8)
+  │
+  ├── Serviço
+  │   ├── N do registro (9..13)
+  │   └── Segmento (14..14)
+  │
+  ├── Identificador favorecido (15..17)
+  │
+  │── Dados complementares
+  │   ├── informação 10 (18..32)
+  │   ├── informação 11 (33..127)
+  │   └── informação 12 (128..226)
+  │
+  ├── Código UG Centralizadora (227..232)
+  │
+  └── Identificação do banco no SPB (233..240)
+  ```
   """
   alias ExCnab.Cnab240.Validator.Details.ModelB, as: ModelBValidator
 
   @spec generate(String.t()) :: {:ok, Map.t()}
   def generate(raw_string) do
+    pix_type = convert_position(raw_string, 15, 17)
+
+    raw_string
+    |> build_with_type(pix_type)
+    |> ModelBValidator.call(raw_string)
+  end
+
+  defp build_with_type(raw_string, pix_type) when pix_type === "   " do
     control_fields = control_fields(raw_string)
     service_fields = service_fields(raw_string)
     beneficiary_fields = beneficiary_fields(raw_string)
@@ -89,7 +121,28 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
       codigo_ug_centralizadora: convert_position(raw_string, 227, 232),
       id_banco_spb: convert_position(raw_string, 233, 240)
     }
-    |> ModelBValidator.call(raw_string)
+  end
+
+  defp build_with_type(raw_string, pix_type) do
+    control_fields = control_fields(raw_string)
+    service_fields = service_fields(raw_string)
+
+    %{
+      controle: control_fields,
+      servico: service_fields,
+      id_favorecido: pix_type,
+      inscricao: %{
+        tipo: convert_position(raw_string, 18),
+        numero: convert_position(raw_string, 19, 32)
+      },
+      dados_complementares: %{
+        informacao_10: convert_position(raw_string, 33, 62),
+        informacao_11: convert_position(raw_string, 63, 127),
+        informacao_12: convert_position(raw_string, 128, 226)
+      },
+      codigo_ug_centralizadora: convert_position(raw_string, 227, 232),
+      id_banco_spb: convert_position(raw_string, 233, 240)
+    }
   end
 
   defp control_fields(raw_string) do
@@ -135,48 +188,46 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
     }
   end
 
-  def encode(detail) do
-    %{
-      controle: %{
-        banco: banco,
-        lote: lote,
-        registro: registro
-      },
-      servico: %{
-        n_registro: n_registro,
-        segmento: segmento
-      },
-      cnab: cnab_01,
-      dados_complementares: %{
-        favorecido: %{
-          inscricao: %{
-            tipo: tipo_inscricao,
-            numero: numero_inscricao
+  def encode(%{
+        controle: %{
+          banco: banco,
+          lote: lote,
+          registro: registro
+        },
+        servico: %{
+          n_registro: n_registro,
+          segmento: segmento
+        },
+        cnab: cnab_01,
+        dados_complementares: %{
+          favorecido: %{
+            inscricao: %{
+              tipo: tipo_inscricao,
+              numero: numero_inscricao
+            },
+            logradouro: logradouro,
+            numero: numero,
+            complemento: complemento,
+            bairro: bairro,
+            cidade: cidade,
+            cep: cep,
+            complemento_cep: complemento_cep,
+            estado: estado
           },
-          logradouro: logradouro,
-          numero: numero,
-          complemento: complemento,
-          bairro: bairro,
-          cidade: cidade,
-          cep: cep,
-          complemento_cep: complemento_cep,
-          estado: estado
+          pagto: %{
+            vencimento: vencimento,
+            valor_documento: valor_documento,
+            abatimento: abatimento,
+            desconto: desconto,
+            mora: mora,
+            multa: multa
+          },
+          cod_favorecido: cod_favorecido
         },
-        pagto: %{
-          vencimento: vencimento,
-          valor_documento: valor_documento,
-          abatimento: abatimento,
-          desconto: desconto,
-          mora: mora,
-          multa: multa
-        },
-        cod_favorecido: cod_favorecido
-      },
-      aviso: aviso,
-      codigo_ug_centralizadora: codigo_ug_centralizadora,
-      id_banco_spb: id_banco_spb
-    } = detail
-
+        aviso: aviso,
+        codigo_ug_centralizadora: codigo_ug_centralizadora,
+        id_banco_spb: id_banco_spb
+      }) do
     [
       banco,
       lote,
@@ -202,6 +253,47 @@ defmodule ExCnab.Cnab240.Templates.Details.ModelB do
       multa,
       cod_favorecido,
       aviso,
+      codigo_ug_centralizadora,
+      id_banco_spb
+    ]
+    |> Enum.join()
+  end
+
+  def encode(%{
+        controle: %{
+          banco: banco,
+          lote: lote,
+          registro: registro
+        },
+        servico: %{
+          n_registro: n_registro,
+          segmento: segmento
+        },
+        id_favorecido: id_favorecido,
+        inscricao: %{
+          tipo: tipo_inscricao,
+          numero: numero_inscricao
+        },
+        dados_complementares: %{
+          informacao_10: informacao_10,
+          informacao_11: informacao_11,
+          informacao_12: informacao_12
+        },
+        codigo_ug_centralizadora: codigo_ug_centralizadora,
+        id_banco_spb: id_banco_spb
+      }) do
+    [
+      banco,
+      lote,
+      registro,
+      n_registro,
+      segmento,
+      id_favorecido,
+      tipo_inscricao,
+      numero_inscricao,
+      informacao_10,
+      informacao_11,
+      informacao_12,
       codigo_ug_centralizadora,
       id_banco_spb
     ]
