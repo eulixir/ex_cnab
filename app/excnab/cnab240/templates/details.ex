@@ -11,7 +11,7 @@ defmodule ExCnab.Cnab240.Templates.Details do
     raw_details
     |> build_recursive([])
     |> case do
-      {:error, error} -> {:error, error}
+      {:error, error, raw_content} -> {:error, error, raw_content}
       details -> ChunkValidator.call(details, raw_details)
     end
   end

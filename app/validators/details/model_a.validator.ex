@@ -3,13 +3,16 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelA do
   An implementation of chain of responsibility to validate the model A.
   """
 
-  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
   def call(builded_detail, raw_detail) do
     with :ok <- validate_length(raw_detail),
          :ok <- validate_record_type(builded_detail.controle.registro),
          :ok <- validate_model_type(builded_detail.servico.segmento),
          :ok <- validate_currency_type(builded_detail.credito.moeda.tipo) do
       {:ok, builded_detail}
+    else
+      {:error, reason} ->
+        {:error, reason, raw_detail}
     end
   end
 
@@ -20,7 +23,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelA do
         :ok
 
       number ->
-        {:error, "Invalid file detail length: #{number}, and should be #{@cnab_size}"}
+        {:error, "Tamanho do segmento inválido: #{number}, deveria ser: #{@cnab_size}"}
     end
   end
 
@@ -31,7 +34,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelA do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{record_type}, and should be #{@record_type}}"}
+        {:error, "Tipo de registro incorreto: #{record_type}, deveria ser #{@record_type}}"}
     end
   end
 
@@ -42,7 +45,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelA do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{model_type}, and should be #{@model_type}}"}
+        {:error, "Tipo de segmento incorreto: #{model_type}, esperado: #{@model_type}}"}
     end
   end
 
@@ -53,7 +56,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelA do
         :ok
 
       false ->
-        {:error, "Invalid currency type: #{currency_type}, and should be #{@currency_type}}"}
+        {:error, "Tipo monetário inválido: #{currency_type}, o esperado é: #{@currency_type}}"}
     end
   end
 end

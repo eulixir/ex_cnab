@@ -63,7 +63,7 @@ defmodule ExCnab.Cnab240.Templates.FileHeader do
 
   alias ExCnab.Cnab240.Validator.FileHeader, as: FileHeaderValidator
 
-  @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
   def generate(raw_string, _attrs) do
     control_fields = control_fields(raw_string)
     company_fields = company_fields(raw_string)

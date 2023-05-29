@@ -3,29 +3,30 @@ defmodule ExCnab.Cnab240.Validator.Details.Chunk do
   An implementation of chain of responsibility to validate the chunks
   """
 
-  @spec call(List.t(), List.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def call(details, raw_details) do
-    with :ok <- validate_length(raw_details),
-         :ok <- validate_details_length(details, raw_details) do
+  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
+  def call(details, raw_detail) do
+    with :ok <- validate_length(raw_detail),
+         :ok <- validate_details_length(details, raw_detail) do
       {:ok, details}
     end
   end
 
   @spec_length 10_000
-  defp validate_length(raw_details) do
-    length = length(raw_details)
+  defp validate_length(raw_detail) do
+    length = length(raw_detail)
 
     case length < @spec_length do
       true ->
         :ok
 
       false ->
-        {:error, "Invalid file header length: #{length}, the max size is #{@spec_length}}"}
+        {:error,
+         "Tamanho total do lote inválido: #{length}, não pode ser maior que #{@spec_length}}"}
     end
   end
 
-  defp validate_details_length(details, raw_details) do
-    raw_length = length(raw_details)
+  defp validate_details_length(details, raw_detail) do
+    raw_length = length(raw_detail)
     length = length(details)
 
     case length == raw_length do
@@ -33,7 +34,7 @@ defmodule ExCnab.Cnab240.Validator.Details.Chunk do
         :ok
 
       false ->
-        {:error, "Invalid details length: #{length}, expected #{raw_length},
+        {:error, "Tamanho dos detalhes inválido: #{length}, esperado: #{raw_length},
          if you have this error, please contact the maintainers and open an issue"}
     end
   end

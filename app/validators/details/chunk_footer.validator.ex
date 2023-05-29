@@ -8,6 +8,9 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkFooter do
     with :ok <- validate_length(raw_footer),
          :ok <- validate_record_type(builded_footer.controle.registro) do
       {:ok, builded_footer}
+    else
+      {:error, reason} ->
+        {:error, reason, raw_footer}
     end
   end
 
@@ -18,7 +21,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkFooter do
         :ok
 
       number ->
-        {:error, "Invalid file footer length: #{number}, and should be #{@cnab_size}"}
+        {:error, "Tamanho inválido para o footer: #{number}, deveria ser #{@cnab_size}"}
     end
   end
 
@@ -29,7 +32,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkFooter do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{record_type}, and should be #{@record_type}}"}
+        {:error, "Tipo de registro incorreto: #{record_type}, deveria ser #{@record_type}}"}
     end
   end
 end

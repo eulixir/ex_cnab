@@ -3,18 +3,21 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ52 do
   An implementation of chain of responsibility to validate the model J.
   """
 
-  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def call(builded_details, raw_details) do
-    with :ok <- validate_length(raw_details),
+  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
+  def call(builded_details, raw_detail) do
+    with :ok <- validate_length(raw_detail),
          :ok <- validate_record_type(builded_details.controle.registro),
          :ok <- validate_model_type(builded_details.servico.segmento) do
       {:ok, builded_details}
+    else
+      {:error, reason} ->
+        {:error, reason, raw_detail}
     end
   end
 
   @cnab_size 240
-  defp validate_length(raw_details) do
-    case String.length(raw_details) do
+  defp validate_length(raw_detail) do
+    case String.length(raw_detail) do
       @cnab_size ->
         :ok
 
@@ -30,7 +33,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ52 do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{record_type}, and should be #{@record_type}}"}
+        {:error, "Tipo de registro incorreto: #{record_type}, deveria ser #{@record_type}}"}
     end
   end
 
@@ -41,7 +44,7 @@ defmodule ExCnab.Cnab240.Validator.Details.ModelJ52 do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{model_type}, and should be #{@model_type}}"}
+        {:error, "Tipo de segmento incorreto: #{model_type}, esperado: #{@model_type}}"}
     end
   end
 end

@@ -31,7 +31,8 @@ defmodule ExCnab.Cnab240.Templates.FileFooter do
 
   alias ExCnab.Cnab240.Validator.FileFooter, as: FileFooterValidator
 
-  @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  @spec generate(String.t(), Map.t()) ::
+          {:ok, Map.t()} | {:error, String.t(), String.t()}
   def generate(raw_string, _attrs) do
     info = info_fields(raw_string)
     total = total_fields(raw_string)

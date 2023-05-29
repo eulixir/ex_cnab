@@ -3,13 +3,16 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
   An implementation of chain of responsibility to validate the file footer.
   """
 
-  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
   def call(builded_footer, raw_footer) do
     with :ok <- validate_length(raw_footer),
          :ok <- validate_chunk_size(builded_footer.total.qnt_lotes),
          :ok <- validate_records_size(builded_footer.total.qnt_registros),
          :ok <- validate_record_type(builded_footer.controle.registro) do
       {:ok, builded_footer}
+    else
+      {:error, reason} ->
+        {:error, reason, raw_footer}
     end
   end
 
@@ -20,7 +23,7 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
         :ok
 
       number ->
-        {:error, "Invalid file footer length: #{number}, and should be #{@cnab_size}"}
+        {:error, "Tamanho do rodapé invalido: #{number}, o esperado era: #{@cnab_size}"}
     end
   end
 
@@ -34,8 +37,8 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
 
       false ->
         {:error,
-         "The amount of batches in this file is higher than the limit proposed by FEBRABAN #{@batch_limit},
-         the amount of batches for this cnab is #{qnt_lotes}"}
+         "A quantidade de lotes nesse arquivo é maior do que o limite proposto pela FEBRABAN#{@batch_limit},
+         a quantidade esperada para esse cnab é de: #{qnt_lotes}"}
     end
   end
 
@@ -49,8 +52,8 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
 
       false ->
         {:error,
-         "The amount of records in this file is higher than the limit proposed by FEBRABAN #{@batch_limit},
-         the amount of records for this cnab is #{qnt_registros}"}
+         "A quantidade de registros nesse arquivo é maior do que o limite proposto pela FEBRABAN #{@batch_limit},
+         a quantidade de registros para esse cnab é: #{qnt_registros}"}
     end
   end
 
@@ -61,7 +64,7 @@ defmodule ExCnab.Cnab240.Validator.FileFooter do
         :ok
 
       false ->
-        {:error, "Invalid record type: #{record_type}, and should be #{@record_type}"}
+        {:error, "Tipo de registro inválido: #{record_type}, deveria ser: #{@record_type}"}
     end
   end
 end

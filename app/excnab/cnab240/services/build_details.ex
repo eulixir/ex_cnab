@@ -74,7 +74,7 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
     }
   }
 
-  @spec run(Map.t(), Map.t()) :: {:ok, Map.t()}
+  @spec run(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t(), String.t()}
   def run(%{chunks: batches}, _attrs) do
     with {:ok, builded_details} <- build_recursive(batches, [], batches, nil),
          {:ok, _} <- DetailsValidator.call(builded_details, batches) do

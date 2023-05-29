@@ -20,23 +20,49 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
   @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def run(file, attrs \\ %{}) do
-    with {:ok, map} <- read_file(file),
+    list = read_file(file)
+
+    with {:ok, map} <- classify_by_type(list),
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
          {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
          {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
       build_response(file_header, details, footer, filename_info, :ok)
+    else
+      {:error, error, line_error} ->
+        line =
+          list
+          |> Enum.find_index(&(&1 == line_error))
+          |> Kernel.+(1)
+
+        {:error, error, "Falha na linha #{line}"}
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 
   @spec run!(String.t(), Map.t()) :: Map.t() | {:error, String.t()}
   def run!(file, attrs) do
-    with {:ok, map} <- read_file(file),
+    list = read_file(file)
+
+    with {:ok, map} <- classify_by_type(list),
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
          {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
          {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
       build_response(file_header, details, footer, filename_info, :no)
+    else
+      {:error, error, line_error} ->
+        line =
+          list
+          |> Enum.find_index(&(&1 == line_error))
+          |> Kernel.+(1)
+
+        {:error, error, "Falha na linha #{line}"}
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 
@@ -44,9 +70,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
     with {:ok, content} <- File.read(file),
          {:ok, %{size: size}} <- File.stat(file),
          true <- size <= 524_288_000 do
-      content
-      |> String.split("\r\n")
-      |> classify_by_type()
+      String.split(content, "\r\n")
     else
       false ->
         {:error, "File size is bigger than 500MB"}
