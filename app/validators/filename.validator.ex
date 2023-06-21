@@ -3,27 +3,19 @@ defmodule ExCnab.Cnab240.Validator.Filename do
   An implementation of chain of responsibility to validate the filename.
   """
 
-  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def call(attrs, codigo_convenio_banco) do
+  @spec call(Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def call(attrs) do
     with :ok <- validate_extension(attrs),
-         :ok <- validate_bank_code(attrs, codigo_convenio_banco),
          :ok <- validate_date(attrs) do
       {:ok, attrs}
     end
   end
 
-  @possible_extensions ~w(.ret .rem .RET .REM)
+  @possible_extensions ~w(.ret .rem .RET .REM .txt)
   defp validate_extension(attrs) do
     case attrs.formato_arquivo in @possible_extensions do
       true -> :ok
       false -> {:error, "Invalid extension"}
-    end
-  end
-
-  defp validate_bank_code(attrs, codigo_convenio_banco) do
-    case attrs.codigo_convenio == String.trim(codigo_convenio_banco) do
-      true -> :ok
-      false -> {:error, "Invalid bank code"}
     end
   end
 

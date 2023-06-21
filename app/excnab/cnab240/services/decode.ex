@@ -26,7 +26,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
          {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
-         {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
+         {:ok, filename_info} <- GetFileInfo.run(file, attrs) do
       build_response(file_header, details, footer, filename_info, :ok)
     else
       {:error, error, line_error} ->
@@ -50,7 +50,7 @@ defmodule ExCnab.Cnab240.Services.Decode do
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
          {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
-         {:ok, filename_info} <- GetFileInfo.run(file, file_header, attrs) do
+         {:ok, filename_info} <- GetFileInfo.run(file, attrs) do
       build_response(file_header, details, footer, filename_info, :no)
     else
       {:error, error, line_error} ->

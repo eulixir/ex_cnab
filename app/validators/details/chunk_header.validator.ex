@@ -29,8 +29,12 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkHeader do
   @layout_chunk_version "042"
   defp chunk_layout_version(layout) do
     case layout === @layout_chunk_version do
-      true -> :ok
-      _ -> {:error, "Versão do layout inválida: #{layout}, esperado: #{@layout_chunk_version}"}
+      true ->
+        :ok
+
+      _ ->
+        {:error,
+         "Versão do layout do lote inválida: #{layout}, esperado: #{@layout_chunk_version}"}
     end
   end
 

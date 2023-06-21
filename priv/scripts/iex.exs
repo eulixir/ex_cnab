@@ -1,8 +1,9 @@
 import ExCnab240
 
 {:ok, decoded1} =
-  "../documents/JVH06102.rem"
+  "../documents/Senior_files/JVH06104.rem"
   |> decode(%{})
+  |> IO.inspect(label: "decoded1")
 
 decoded1.cnab240
 |> encode!(%{})
