@@ -3,10 +3,11 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkFooter do
   An implementation of chain of responsibility to validate the chunk footer.
   """
 
-  @spec call(Map.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def call(builded_footer, raw_footer) do
+  @spec call(Map.t(), String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def call(builded_footer, raw_footer, builded_details) do
     with :ok <- validate_length(raw_footer),
-         :ok <- validate_record_type(builded_footer.controle.registro) do
+         :ok <- validate_record_type(builded_footer.controle.registro),
+         :ok <- validate_value_amount(builded_footer, builded_details) do
       {:ok, builded_footer}
     else
       {:error, reason} ->
@@ -33,6 +34,19 @@ defmodule ExCnab.Cnab240.Validator.Details.ChunkFooter do
 
       false ->
         {:error, "Tipo de registro incorreto: #{record_type}, deveria ser #{@record_type}}"}
+    end
+  end
+
+  defp validate_value_amount(builded_footer, builded_details) do
+    details_value = ExCnab.Cnab240.Services.CalcAmount.run(builded_details)
+    footer_value = String.to_integer(builded_footer.total.valor)
+
+    case details_value == footer_value do
+      true ->
+        :ok
+
+      false ->
+        {:error, "Valor total do lote incorreto: #{footer_value}, deveria ser #{details_value}"}
     end
   end
 end

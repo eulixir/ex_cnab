@@ -90,7 +90,7 @@ defmodule ExCnab.Cnab240.Services.BuildDetails do
          %{header: header, detail: details, footer: footer} <- hd[detail_key_id],
          {:ok, builded_header} <- ChunkHeader.generate(header),
          {:ok, builded_details} <- Details.generate(details),
-         {:ok, builded_footer} <- ChunkFooter.generate(footer),
+         {:ok, builded_footer} <- ChunkFooter.generate(footer, builded_details),
          amount <- get_chunk_infos(builded_header, builded_footer) do
       details = [
         %{

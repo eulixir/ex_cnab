@@ -35,8 +35,8 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
 
   alias ExCnab.Cnab240.Validator.Details.ChunkFooter, as: ChunkFooterValidator
 
-  @spec generate(String.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def generate(raw_string) do
+  @spec generate(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
+  def generate(raw_string, builded_details) do
     control_field = control_fields(raw_string)
     total = total_fields(raw_string)
 
@@ -48,7 +48,7 @@ defmodule ExCnab.Cnab240.Templates.ChunkFooter do
       uso_febraban_02: convert_position(raw_string, 66, 230),
       ocorrencias: convert_position(raw_string, 231, 240)
     }
-    |> ChunkFooterValidator.call(raw_string)
+    |> ChunkFooterValidator.call(raw_string, builded_details)
   end
 
   defp control_fields(raw_string) do

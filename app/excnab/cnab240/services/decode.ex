@@ -9,6 +9,8 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
   alias ExCnab.Cnab240.Services.GetFileInfo
 
+  alias ExCnab.Cnab240.Services.HasIdenticalInformations
+
   @item_type %{
     "0" => :file_header,
     "1" => :chunk_header,
@@ -20,38 +22,46 @@ defmodule ExCnab.Cnab240.Services.Decode do
 
   @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
   def run(file, attrs \\ %{}) do
-    list = read_file(file)
-
-    with {:ok, map} <- classify_by_type(list),
-         {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
-         {:ok, details} <- BuildDetails.run(map.chunks, attrs),
-         {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
-         {:ok, filename_info} <- GetFileInfo.run(file, attrs) do
-      build_response(file_header, details, footer, filename_info, :ok)
-    else
-      {:error, error, line_error} ->
-        line =
-          list
-          |> Enum.find_index(&(&1 == line_error))
-          |> Kernel.+(1)
-
-        {:error, error, "Falha na linha #{line}"}
-
-      {:error, error} ->
-        {:error, error}
+    with list <- read_file(file),
+         {:ok, content} <- generate_content(file, attrs, list) do
+      build_response(
+        content.file_header,
+        content.details,
+        content.footer,
+        content.filename_info,
+        :ok
+      )
     end
   end
 
   @spec run!(String.t(), Map.t()) :: Map.t() | {:error, String.t()}
   def run!(file, attrs) do
-    list = read_file(file)
+    with list <- read_file(file),
+         {:ok, content} <- generate_content(file, attrs, list) do
+      build_response(
+        content.file_header,
+        content.details,
+        content.footer,
+        content.filename_info,
+        :no
+      )
+    end
+  end
 
-    with {:ok, map} <- classify_by_type(list),
+  defp generate_content(file, attrs, list) do
+    with :ok <- HasIdenticalInformations.run(list),
+         {:ok, map} <- classify_by_type(list),
          {:ok, file_header} <- FileHeader.generate(map.file_header, attrs),
          {:ok, details} <- BuildDetails.run(map.chunks, attrs),
          {:ok, footer} <- FileFooter.generate(map.file_footer, attrs),
          {:ok, filename_info} <- GetFileInfo.run(file, attrs) do
-      build_response(file_header, details, footer, filename_info, :no)
+      {:ok,
+       %{
+         file_header: file_header,
+         details: details,
+         footer: footer,
+         filename_info: filename_info
+       }}
     else
       {:error, error, line_error} ->
         line =
