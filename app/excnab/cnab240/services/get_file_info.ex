@@ -8,10 +8,12 @@ defmodule ExCnab.Cnab240.Services.GetFileInfo do
   alias ExCnab.Cnab240.Validator.Filename, as: FilenameValidator
 
   @spec run(String.t(), Map.t()) :: {:ok, Map.t()} | {:error, String.t()}
-  def run(file, _attrs \\ %{}) do
+  def run(file, attrs \\ %{}) do
     filename = Path.basename(file)
 
-    filename
+    params = Map.get(attrs, :filename, filename)
+
+    params
     |> filename_template()
     |> FilenameValidator.call()
   end
