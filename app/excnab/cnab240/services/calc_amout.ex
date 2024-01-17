@@ -22,7 +22,7 @@ defmodule ExCnab.Cnab240.Services.CalcAmount do
 
   defp calc_model("J", details) do
     Enum.reduce(details, 0, fn detail, acc ->
-      case detail.servico.segmento == "J" do
+      case detail.servico.segmento == "J" and !Map.has_key?(detail, :cod_reg) do
         true ->
           acc + String.to_integer(detail.pagamento.valor_pagamento)
 
